@@ -1,727 +1,383 @@
-
 using System.Collections.Generic;
 using UnityEngine;
-
-// Urutan enum dipertahankan agar kompatibel dengan Scene.
-public enum TrashType
-{
-    PlasticBottle = 0,
-    Paper = 1,
-    MetalCan = 2,
-    FoodWaste = 3,
-    DryLeaves = 4,
-    PlasticCup = 5,
-    Cardboard = 6
-}
-
-public enum WasteCategory
-{
-    Organic,
-    Inorganic
-}
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager I;
-
-    public const int TrashTypeCount = 7;
-    public const int ProductCount = 4;
+    public const int TrashTypeCount = 7, ProductCount = 4;
 
     [Header("Status")]
     public int money = 20000;
-
-    [Range(0f, 100f)]
-    public float hunger = 100f;
-
+    [Range(0, 100)] public float hunger = 100f;
     public float hungerDropPerSecond = 0.5f;
 
-    public int bread = 0;
-
-    [Header("Inventory Pemain")]
-    [Min(1)]
+    [Header("Tas")]
     public int inventoryCapacity = 5;
-
     public List<TrashType> carried = new List<TrashType>();
-
-    [Header("Pengaturan Sampah yang Dibuang")]
-    [Tooltip("Opsional. Jika kosong, posisi pemain digunakan otomatis.")]
-    public Transform dropOrigin;
-
-    [Min(0f)]
-    public float dropForwardDistance = 1.25f;
-
-    // Template dibuat otomatis dari objek TrashItem yang sudah ada di Scene.
-    // Tidak perlu mengisi prefab satu per satu melalui Inspector.
-    private TrashItem[] discardTemplates = new TrashItem[TrashTypeCount];
-    private GameObject templateContainer;
-
-    public int CarriedCount => carried != null ? carried.Count : 0;
-
-    public int FreeInventorySpace =>
-        Mathf.Max(0, inventoryCapacity - CarriedCount);
-
-    // Menambahkan sampah hanya jika kapasitas tas masih mencukupi.
-    public bool TryAddCarried(TrashType type, int amount = 1)
-    {
-        if (!IsValidTrashType(type) || amount <= 0 || carried == null)
-            return false;
-
-        if (amount > FreeInventorySpace)
-            return false;
-
-        for (int i = 0; i < amount; i++)
-            carried.Add(type);
-
-        return true;
-    }
-
-    [Header("Stok Tempat Pemilahan")]
-    public int[] sorted = new int[TrashTypeCount];
-
-    [Header("Produk Jadi")]
+    public int bread;
+    public int foodCapacity = 5;
     public int[] products = new int[ProductCount];
 
-    public int totalSold = 0;
+    [Header("Tempat Pilah")]
+    public int[] sorted = new int[TrashTypeCount];
 
-    [HideInInspector]
-    public string prompt = "";
+    [Header("Produk Jatuh")]
+    public GameObject[] productPrefabs = new GameObject[ProductCount];
+    public GameObject[] trashPrefabs = new GameObject[TrashTypeCount];
+    public Transform dropOrigin;
+    public float dropForwardDistance = 1.25f;
 
-    private string message = "";
-    private float messageTimer = 0f;
+    [HideInInspector] public string prompt = "";
+    public int totalSold;
 
     public static readonly string[] TrashNames =
-    {
-        "Botol Plastik",
-        "Kertas",
-        "Kaleng",
-        "Sisa Makanan",
-        "Daun Kering",
-        "Gelas Plastik",
-        "Kardus"
-    };
-
+    { "Botol Plastik", "Kertas", "Kaleng", "Sisa Makanan", "Daun Kering", "Gelas Plastik", "Kardus" };
     public static readonly string[] ProductNames =
-    {
-        "Pot Tanaman",
-        "Buku Catatan",
-        "Wadah Logam",
-        "Kompos"
-    };
-
+    { "Pot Tanaman", "Buku Catatan", "Wadah Logam", "Kompos" };
     public static readonly TrashType[] AllTrashTypes =
-    {
-        TrashType.PlasticBottle,
-        TrashType.PlasticCup,
-        TrashType.Cardboard,
-        TrashType.Paper,
-        TrashType.MetalCan,
-        TrashType.FoodWaste,
-        TrashType.DryLeaves
-    };
+    { TrashType.PlasticBottle, TrashType.PlasticCup, TrashType.Cardboard, TrashType.Paper,
+      TrashType.MetalCan, TrashType.FoodWaste, TrashType.DryLeaves };
 
-    // ==========================================
-    // INITIALIZATION
-    // ==========================================
+    string message = "";
+    float messageTimer;
+    int reservedSlots;
+
+    // Status kematian pemain
+    public bool IsDead { get; private set; }
+
+    public int CarriedCount => carried == null ? 0 : carried.Count;
+    public int CarriedProductCount
+    {
+        get { int n = 0; if (products != null) foreach (int x in products) n += Mathf.Max(0, x); return n; }
+    }
+    public int TotalInventoryCount => CarriedCount + CarriedProductCount;
+    public int FreeInventorySpace => Mathf.Max(0, inventoryCapacity - TotalInventoryCount - reservedSlots);
 
     void Awake()
     {
-        if (I != null && I != this)
-        {
-            Debug.LogWarning(
-                "Terdapat lebih dari satu GameManager."
-            );
+        if (I != null && I != this) { Destroy(gameObject); return; }
+        I = this;
+        if (carried == null) carried = new List<TrashType>();
+        System.Array.Resize(ref sorted, TrashTypeCount);
+        System.Array.Resize(ref products, ProductCount);
+        if (trashPrefabs == null) trashPrefabs = new GameObject[TrashTypeCount];
+        System.Array.Resize(ref trashPrefabs, TrashTypeCount);
+        if (productPrefabs == null) productPrefabs = new GameObject[ProductCount];
+        System.Array.Resize(ref productPrefabs, ProductCount);
+    }
 
-            Destroy(gameObject);
+    void Update()
+    {
+        // Jangan jalankan gameplay lagi setelah karakter mati.
+        if (IsDead) return;
+
+        hunger = Mathf.Max(0, hunger - hungerDropPerSecond * Time.deltaTime);
+
+        // Karakter langsung mati ketika hunger mencapai 0.
+        if (hunger <= 0f)
+        {
+            Die();
             return;
         }
 
-        I = this;
+        if (messageTimer > 0) messageTimer -= Time.deltaTime;
 
-        if (carried == null)
-            carried = new List<TrashType>();
+        if (WorldObject.MenuOpen || VehicleController.CargoMenuOpen || VehicleController.IsPlayerDriving)
+            return;
 
-        if (sorted == null || sorted.Length != TrashTypeCount)
-            sorted = ResizeArray(sorted, TrashTypeCount);
-
-        if (products == null || products.Length != ProductCount)
-            products = ResizeArray(products, ProductCount);
-
-        CacheDiscardTemplates();
+        if (Input.GetKeyDown(KeyCode.F)) Eat();
+        if (Input.GetKeyDown(KeyCode.G)) Discard();
     }
 
-    // Mengambil contoh objek sampah langsung dari TrashObjects di Scene.
-    // Contoh disimpan dalam keadaan nonaktif agar objek aslinya tidak terganggu.
-    void CacheDiscardTemplates()
+    void Die()
     {
-        discardTemplates = new TrashItem[TrashTypeCount];
+        if (IsDead) return;
 
-        templateContainer = new GameObject("__TrashDiscardTemplates");
-        templateContainer.hideFlags = HideFlags.HideInHierarchy;
-        templateContainer.SetActive(false);
+        IsDead = true;
+        hunger = 0f;
 
-        TrashItem[] sceneTrash = FindObjectsByType<TrashItem>(
-            FindObjectsInactive.Exclude,
-            FindObjectsSortMode.None
+        // Menghentikan seluruh gameplay: gerakan, fisika, animasi, dan timer.
+        Time.timeScale = 0f;
+
+        // Tampilkan cursor agar pemain tidak terkunci setelah game over.
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
+        Debug.Log("KARAKTER MATI: Hunger mencapai 0.");
+    }
+
+    void DrawDeathScreen()
+    {
+        // Latar gelap transparan.
+        Color oldColor = GUI.color;
+        GUI.color = new Color(0f, 0f, 0f, 0.78f);
+        GUI.Box(new Rect(0, 0, Screen.width, Screen.height), GUIContent.none);
+        GUI.color = oldColor;
+
+        // Judul kematian.
+        GUIStyle titleStyle = new GUIStyle(GUI.skin.label);
+        titleStyle.alignment = TextAnchor.MiddleCenter;
+        titleStyle.fontSize = Mathf.Clamp(Screen.height / 12, 28, 64);
+        titleStyle.fontStyle = FontStyle.Bold;
+        titleStyle.normal.textColor = Color.red;
+
+        GUI.Label(
+            new Rect(0, Screen.height * 0.36f, Screen.width, 90),
+            "KARAKTER MATI",
+            titleStyle
         );
 
-        foreach (TrashItem sceneItem in sceneTrash)
-        {
-            if (sceneItem == null || !IsValidTrashType(sceneItem.type))
-                continue;
+        // Keterangan.
+        GUIStyle subtitleStyle = new GUIStyle(GUI.skin.label);
+        subtitleStyle.alignment = TextAnchor.MiddleCenter;
+        subtitleStyle.fontSize = Mathf.Clamp(Screen.height / 35, 14, 24);
+        subtitleStyle.normal.textColor = Color.white;
 
-            int index = (int)sceneItem.type;
-            if (discardTemplates[index] != null)
-                continue;
-
-            GameObject templateObject = Instantiate(sceneItem.gameObject);
-            templateObject.name = "Template_" + GetTrashName(sceneItem.type);
-            templateObject.transform.SetParent(templateContainer.transform, false);
-            templateObject.SetActive(false);
-
-            TrashItem template = templateObject.GetComponent<TrashItem>();
-            if (template == null)
-                template = templateObject.GetComponentInChildren<TrashItem>(true);
-
-            if (template != null)
-                discardTemplates[index] = template;
-            else
-                Destroy(templateObject);
-        }
-
-        int found = 0;
-        for (int i = 0; i < discardTemplates.Length; i++)
-        {
-            if (discardTemplates[i] != null)
-                found++;
-        }
-
-        Debug.Log("GameManager: " + found + " dari " + TrashTypeCount +
-            " jenis contoh sampah berhasil dibaca dari Scene.");
+        GUI.Label(
+            new Rect(0, Screen.height * 0.49f, Screen.width, 50),
+            "Kamu kehabisan energi karena Hunger mencapai 0.",
+            subtitleStyle
+        );
     }
 
-    int[] ResizeArray(int[] oldArray, int newSize)
+    public bool TryAddCarried(TrashType type, int amount = 1)
     {
-        int[] newArray = new int[newSize];
-
-        if (oldArray != null)
-        {
-            int copyLength = Mathf.Min(
-                oldArray.Length,
-                newSize
-            );
-
-            for (int i = 0; i < copyLength; i++)
-                newArray[i] = oldArray[i];
-        }
-
-        return newArray;
+        if (!IsValidTrashType(type) || amount <= 0 || amount > FreeInventorySpace) return false;
+        for (int i = 0; i < amount; i++) carried.Add(type);
+        return true;
     }
-
-    // ==========================================
-    // TRASH INFORMATION
-    // ==========================================
-
-    public static bool IsValidTrashType(TrashType type)
-    {
-        int index = (int)type;
-
-        return index >= 0 && index < TrashTypeCount;
-    }
-
-    public static string GetTrashName(TrashType type)
-    {
-        if (!IsValidTrashType(type))
-            return "Sampah tidak dikenal";
-
-        return TrashNames[(int)type];
-    }
-
-    public static WasteCategory GetCategory(TrashType type)
-    {
-        switch (type)
-        {
-            case TrashType.FoodWaste:
-            case TrashType.DryLeaves:
-                return WasteCategory.Organic;
-
-            case TrashType.PlasticBottle:
-            case TrashType.PlasticCup:
-            case TrashType.Cardboard:
-            case TrashType.Paper:
-            case TrashType.MetalCan:
-            default:
-                return WasteCategory.Inorganic;
-        }
-    }
-
-    // ==========================================
-    // INVENTORY
-    // ==========================================
 
     public int CountCarried(TrashType type)
     {
-        if (carried == null)
-            return 0;
-
-        int count = 0;
-
-        foreach (TrashType item in carried)
-        {
-            if (item == type)
-                count++;
-        }
-
-        return count;
+        int n = 0;
+        if (carried != null) foreach (TrashType t in carried) if (t == type) n++;
+        return n;
     }
 
-    public int CountCategory(
-        int[] stock,
-        WasteCategory category
-    )
+    public int CountCategory(int[] stock, WasteCategory cat)
     {
-        if (stock == null)
-            return 0;
-
-        int total = 0;
-
-        int count = Mathf.Min(
-            stock.Length,
-            TrashTypeCount
-        );
-
-        for (int i = 0; i < count; i++)
-        {
-            if (GetCategory((TrashType)i) == category)
-                total += stock[i];
-        }
-
-        return total;
+        int n = 0;
+        if (stock == null) return 0;
+        for (int i = 0; i < Mathf.Min(stock.Length, TrashTypeCount); i++)
+            if (GetCategory((TrashType)i) == cat) n += stock[i];
+        return n;
     }
-
-    // ==========================================
-    // RECYCLING PRODUCT
-    // ==========================================
 
     public int GetProductIndex(TrashType type)
     {
         switch (type)
         {
-            case TrashType.PlasticBottle:
-            case TrashType.PlasticCup:
-                return 0;
-
-            case TrashType.Cardboard:
-            case TrashType.Paper:
-                return 1;
-
-            case TrashType.MetalCan:
-                return 2;
-
-            case TrashType.FoodWaste:
-            case TrashType.DryLeaves:
-                return 3;
-
-            default:
-                return -1;
+            case TrashType.PlasticBottle: case TrashType.PlasticCup: return 0;
+            case TrashType.Cardboard: case TrashType.Paper: return 1;
+            case TrashType.MetalCan: return 2;
+            case TrashType.FoodWaste: case TrashType.DryLeaves: return 3;
+            default: return -1;
         }
     }
 
-    // ==========================================
-    // MAIN UPDATE
-    // ==========================================
-
-    void Update()
+    public bool TryReserveProductSlots(int n)
     {
-        UpdateHunger();
-        HandleEating();
-        HandleDiscarding();
-        UpdateMessage();
+        if (n <= 0 || n > FreeInventorySpace) return false;
+        reservedSlots += n; return true;
+    }
+    public void ReleaseReservedProductSlots(int n) { reservedSlots = Mathf.Max(0, reservedSlots - n); }
+    public bool CompleteReservedProductProduction(int index, int n)
+    {
+        if (index < 0 || index >= ProductCount || n <= 0) { ReleaseReservedProductSlots(n); return false; }
+        ReleaseReservedProductSlots(n); products[index] += n; return true;
     }
 
-    // ==========================================
-    // DISCARD SYSTEM - PRESS G
-    // ==========================================
+    public void Notify(string text) { message = text; messageTimer = 3f; Debug.Log(text); }
 
-    void HandleDiscarding()
+    void Eat()
     {
-        if (SortingBin.MenuOpen ||
-            Machine.MenuOpen ||
-            SellPoint.MenuOpen ||
-            VehicleCargo.MenuOpen ||
-            VehicleController.IsPlayerDriving)
+        if (bread <= 0) { Notify("Tidak ada roti! Beli di toko roti."); return; }
+        if (hunger >= 100) { Notify("Hunger sudah penuh!"); return; }
+        bread--; hunger = Mathf.Min(100, hunger + 20);
+        Notify("Makan roti berhasil. Hunger: " + Mathf.CeilToInt(hunger) + " | Sisa roti: " + bread);
+    }
+
+    Transform DropOrigin()
+    {
+        if (dropOrigin != null) return dropOrigin;
+        PlayerController p = FindFirstObjectByType<PlayerController>();
+        return p != null ? p.transform : null;
+    }
+
+    void Discard()
+    {
+        if (CarriedProductCount > 0) DiscardProduct();
+        else DiscardTrash();
+    }
+
+    void DiscardProduct()
+    {
+        Transform origin = DropOrigin();
+        if (origin == null) { Notify("Posisi pemain tidak ditemukan."); return; }
+        for (int i = ProductCount - 1; i >= 0; i--)
         {
+            if (products[i] <= 0) continue;
+            GameObject prefab = productPrefabs[i];
+            GameObject obj = prefab != null ? Instantiate(prefab, origin.position + origin.forward * dropForwardDistance, prefab.transform.rotation)
+                : GameObject.CreatePrimitive(i == 1 ? PrimitiveType.Cube : PrimitiveType.Cylinder);
+            obj.name = "Dropped_" + ProductNames[i];
+            WorldObject item = obj.GetComponent<WorldObject>();
+            if (item == null) item = obj.AddComponent<WorldObject>();
+            item.objectType = WorldObjectType.ProductPickup;
+            item.productIndex = i;
+            if (obj.GetComponent<Collider>() == null) obj.AddComponent<BoxCollider>();
+            if (obj.GetComponent<Rigidbody>() == null) obj.AddComponent<Rigidbody>();
+            obj.GetComponent<Rigidbody>().AddForce(origin.forward * 1.5f + Vector3.up, ForceMode.Impulse);
+            products[i]--;
+            Notify("Membuang " + ProductNames[i] + ". Tekan E untuk mengambil kembali.");
             return;
         }
-
-        if (!Input.GetKeyDown(KeyCode.G))
-            return;
-
-        DiscardLastCarried();
     }
 
-    public bool DiscardLastCarried()
+    
+void DiscardTrash()
+{
+    if (carried == null || carried.Count == 0)
     {
-        if (carried == null || carried.Count == 0)
-        {
-            Notify("Tas pemain kosong. Tidak ada sampah yang bisa dibuang.");
-            return false;
-        }
+        Notify("Tas barang kosong.");
+        return;
+    }
 
-        int lastIndex = carried.Count - 1;
-        TrashType discardedType = carried[lastIndex];
+    Transform origin = dropOrigin;
 
-        Transform origin = dropOrigin;
-        if (origin == null)
-        {
-            PlayerController player = FindFirstObjectByType<PlayerController>();
-            if (player != null)
-                origin = player.transform;
-        }
+    if (origin == null)
+    {
+        PlayerController player = FindFirstObjectByType<PlayerController>();
+        if (player != null)
+            origin = player.transform;
+    }
 
-        if (origin == null)
-        {
-            Notify("Posisi pemain tidak ditemukan. Sampah tetap berada di tas.");
-            return false;
-        }
+    if (origin == null)
+    {
+        Notify("Posisi pemain tidak ditemukan.");
+        return;
+    }
 
-        Vector3 spawnPosition = origin.position +
-            origin.forward * dropForwardDistance +
-            Vector3.up * 0.5f;
+    int last = carried.Count - 1;
+    TrashType type = carried[last];
+    int index = (int)type;
 
-        TrashItem droppedItem = CreateDroppedTrash(
-            discardedType,
-            spawnPosition
+    if (index < 0 || index >= trashPrefabs.Length)
+    {
+        Debug.LogError("Trash Prefab index tidak valid: " + index);
+        return;
+    }
+
+    Vector3 spawnPosition =
+        origin.position +
+        origin.forward * dropForwardDistance +
+        Vector3.up * 0.8f;
+
+    GameObject prefab = trashPrefabs[index];
+    GameObject obj;
+
+    if (prefab != null)
+    {
+        obj = Instantiate(
+            prefab,
+            spawnPosition,
+            prefab.transform.rotation
         );
-
-        if (droppedItem == null)
-        {
-            Notify("Gagal membuat objek sampah. Sampah tetap berada di tas.");
-            return false;
-        }
-
-        droppedItem.type = discardedType;
-        droppedItem.prompt = "[E] Ambil sampah";
-
-        // Hapus dari tas hanya setelah objek sampah berhasil dibuat.
-        carried.RemoveAt(lastIndex);
-
-        Rigidbody droppedBody = droppedItem.GetComponent<Rigidbody>();
-        if (droppedBody == null)
-            droppedBody = droppedItem.gameObject.AddComponent<Rigidbody>();
-
-        droppedBody.AddForce(
-            origin.forward * 1.5f + Vector3.up * 0.75f,
-            ForceMode.Impulse
-        );
-
-        Notify("Membuang " + GetTrashName(discardedType) +
-            ". Sampah muncul di depan pemain. Isi tas: " +
-            CarriedCount + " / " + inventoryCapacity);
-        return true;
     }
-
-    // Membuat sampah dari contoh objek Scene. Jika jenisnya tidak ditemukan,
-    // buat objek sederhana agar proses buang tetap berfungsi tanpa Inspector.
-    TrashItem CreateDroppedTrash(TrashType type, Vector3 position)
+    else
     {
-        int index = (int)type;
-        TrashItem template =
-            discardTemplates != null &&
-            index >= 0 && index < discardTemplates.Length
-            ? discardTemplates[index]
-            : null;
+        obj = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        obj.transform.position = spawnPosition;
+        obj.transform.localScale = Vector3.one * 0.35f;
 
-        GameObject droppedObject;
-
-        if (template != null)
-        {
-            droppedObject = Instantiate(
-                template.gameObject,
-                position,
-                Quaternion.identity,
-                null
-            );
-            droppedObject.name = "Dropped_" + GetTrashName(type);
-            droppedObject.SetActive(true);
-        }
-        else
-        {
-            // Fallback: tetap bisa diambil kembali dengan tombol E.
-            droppedObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            droppedObject.name = "Dropped_" + GetTrashName(type);
-            droppedObject.transform.position = position;
-            droppedObject.transform.localScale = Vector3.one * 0.35f;
-
-            Renderer itemRenderer = droppedObject.GetComponent<Renderer>();
-            if (itemRenderer != null)
-            {
-                switch (type)
-                {
-                    case TrashType.PlasticBottle:
-                    case TrashType.PlasticCup:
-                        itemRenderer.material.color = new Color(0.2f, 0.65f, 1f);
-                        break;
-                    case TrashType.Paper:
-                    case TrashType.Cardboard:
-                        itemRenderer.material.color = new Color(0.75f, 0.58f, 0.32f);
-                        break;
-                    case TrashType.MetalCan:
-                        itemRenderer.material.color = Color.gray;
-                        break;
-                    case TrashType.FoodWaste:
-                        itemRenderer.material.color = new Color(0.45f, 0.7f, 0.25f);
-                        break;
-                    case TrashType.DryLeaves:
-                        itemRenderer.material.color = new Color(0.55f, 0.32f, 0.12f);
-                        break;
-                }
-            }
-        }
-
-        TrashItem droppedItem = droppedObject.GetComponent<TrashItem>();
-        if (droppedItem == null)
-            droppedItem = droppedObject.AddComponent<TrashItem>();
-
-        if (droppedObject.GetComponent<Collider>() == null)
-            droppedObject.AddComponent<BoxCollider>();
-
-        droppedItem.type = type;
-        droppedItem.prompt = "[E] Ambil sampah";
-        return droppedItem;
-    }
-
-    // ==========================================
-    // HUNGER SYSTEM
-    // ==========================================
-
-    void UpdateHunger()
-    {
-        hunger = Mathf.Max(
-            0f,
-            hunger - hungerDropPerSecond * Time.deltaTime
+        Debug.LogWarning(
+            "Prefab tidak diisi untuk: " + GetTrashName(type)
         );
     }
 
-    // ==========================================
-    // EATING SYSTEM - PRESS F
-    // ==========================================
-
-    void HandleEating()
+    if (obj == null)
     {
-        // Jangan makan ketika menu interaksi terbuka.
-
-        if (SortingBin.MenuOpen ||
-            Machine.MenuOpen ||
-            SellPoint.MenuOpen ||
-            VehicleCargo.MenuOpen)
-        {
-            return;
-        }
-
-        // Tunggu tombol F ditekan.
-
-        if (!Input.GetKeyDown(KeyCode.F))
-            return;
-
-        // Periksa apakah pemain memiliki roti.
-
-        if (bread <= 0)
-        {
-            Notify(
-                "Tidak ada roti! Beli roti di FoodShop."
-            );
-
-            return;
-        }
-
-        // Periksa apakah hunger sudah penuh.
-
-        if (hunger >= 100f)
-        {
-            Notify("Hunger sudah penuh!");
-
-            return;
-        }
-
-        // Konsumsi satu roti.
-
-        bread--;
-
-        // Tambahkan hunger 20 poin.
-
-        float oldHunger = hunger;
-
-        hunger = Mathf.Min(
-            100f,
-            hunger + 20f
-        );
-
-        float restored = hunger - oldHunger;
-
-        // Tampilkan notifikasi.
-
-        Notify(
-            "Berhasil makan roti! Hunger +" +
-            restored.ToString("0") +
-            " | Sisa roti: " + bread
-        );
-
-        Debug.Log(
-            "MAKAN BERHASIL | Hunger: " +
-            hunger +
-            " | Roti: " +
-            bread
-        );
+        Debug.LogError("Gagal membuat objek sampah.");
+        return;
     }
 
-    // ==========================================
-    // MESSAGE SYSTEM
-    // ==========================================
+    obj.name = "Dropped_" + GetTrashName(type);
+    obj.transform.position = spawnPosition;
+    obj.SetActive(true);
 
-    void UpdateMessage()
-    {
-        if (messageTimer > 0f)
-            messageTimer -= Time.deltaTime;
-    }
+    WorldObject item = obj.GetComponent<WorldObject>();
 
-    public void Notify(string text)
-    {
-        message = text;
-        messageTimer = 3f;
+    if (item == null)
+        item = obj.AddComponent<WorldObject>();
 
-        Debug.Log(text);
-    }
+    item.objectType = WorldObjectType.Trash;
+    item.trashType = type;
+    item.prompt = "[E] Ambil sampah";
 
-    // ==========================================
-    // HUD
-    // ==========================================
+    if (obj.GetComponentInChildren<Collider>() == null)
+        obj.AddComponent<BoxCollider>();
+
+    Rigidbody rb = obj.GetComponent<Rigidbody>();
+
+    if (rb == null)
+        rb = obj.AddComponent<Rigidbody>();
+
+    rb.AddForce(
+        origin.forward * 1.5f + Vector3.up,
+        ForceMode.Impulse
+    );
+
+    carried.RemoveAt(last);
+
+    Debug.Log(
+        "BERHASIL DROP: " + obj.name +
+        " | Position: " + obj.transform.position
+    );
+
+    Notify("Membuang " + GetTrashName(type));
+}
+
 
     void OnGUI()
     {
-        GUI.skin.label.fontSize = 14;
+        // OnGUI tetap dipanggil ketika Time.timeScale = 0,
+        // sehingga layar kematian tetap bisa ditampilkan.
+        if (IsDead)
+        {
+            DrawDeathScreen();
+            return;
+        }
 
-        DrawHUDPanel();
-        DrawInteraction();
-    }
+        if (WorldObject.MenuOpen || VehicleController.CargoMenuOpen)
+        {
+            DrawMessage(); return;
+        }
 
-    void DrawHUDPanel()
-    {
-        // Panel latar agar informasi mudah dibaca dan tidak bertumpuk.
-        float panelWidth = Mathf.Min(560f, Screen.width - 20f);
-        float panelHeight = 218f;
-
-        
-
-        float x = 22f;
-        float width = panelWidth - 24f;
-        float y = 42f;
-        float line = 23f;
-
-        GUI.Label(
-            new Rect(x, y, width, line),
-            "Hunger: " + Mathf.CeilToInt(hunger) + " / 100"
-        );
-        y += line;
-
-        GUI.Label(
-            new Rect(x, y, width, line),
-            "Uang: Rp" + money.ToString("N0")
-        );
-        y += line + 5f;
-
-        GUI.Label(
-            new Rect(x, y, width, line),
-            "Tas: " + CarriedCount + " / " + inventoryCapacity
-        );
-        y += line;
-
-        GUI.Label(
-            new Rect(x, y, width, line),
-            "Botol: " + CountCarried(TrashType.PlasticBottle) +
-            " | Gelas: " + CountCarried(TrashType.PlasticCup) +
-            " | Kardus: " + CountCarried(TrashType.Cardboard) +
-            " | Kertas: " + CountCarried(TrashType.Paper)
-        );
-        y += line;
-
-        GUI.Label(
-            new Rect(x, y, width, line),
-            "Kaleng: " + CountCarried(TrashType.MetalCan) +
-            " | Makanan: " + CountCarried(TrashType.FoodWaste) +
-            " | Daun: " + CountCarried(TrashType.DryLeaves) +
-            " | Roti: " + bread
-        );
-        y += line;
-
-        GUI.Label(
-            new Rect(x, y, width, line),
-            "Tempat Pilah: Organik " +
-            CountCategory(sorted, WasteCategory.Organic) +
-            " | Anorganik " +
-            CountCategory(sorted, WasteCategory.Inorganic)
-        );
-        y += line;
-
-        GUI.Label(
-            new Rect(x, y, width, line),
-            "Produk: Pot " + products[0] +
-            " | Buku " + products[1] +
-            " | Wadah " + products[2] +
-            " | Kompos " + products[3] +
-            " | Terjual: " + totalSold
-        );
-        y += line;
-
-        GUI.Label(
-            new Rect(x, y, width, line),
-            "Tekan G untuk membuang 1 sampah dari tas."
-        );
-    }
-
-    void DrawInteraction()
-    {
-        GUI.skin.label.fontSize = 16;
-
-        GUI.Label(
-            new Rect(
-                Screen.width / 2 - 8,
-                Screen.height / 2 - 13,
-                30,
-                25
-            ),
-            "+"
-        );
-
+        float w = Mathf.Min(500, Screen.width - 40);
+        GUI.Box(new Rect(20, 20, w, 165), "STATUS PEMAIN");
+        GUI.Label(new Rect(32, 48, w - 24, 20), "Uang: Rp" + money.ToString("N0") + " | Hunger: " + Mathf.CeilToInt(hunger) + "/100");
+        GUI.Label(new Rect(32, 71, w - 24, 20), "Tas barang: " + TotalInventoryCount + "/" + inventoryCapacity +
+            " (Sampah: " + CarriedCount + ", Produk: " + CarriedProductCount + ")");
+        GUI.Label(new Rect(32, 94, w - 24, 20), "Makanan: " + bread + "/" + foodCapacity + " (slot terpisah)");
+        GUI.Label(new Rect(32, 117, w - 24, 20), "Tempat pilah: Organik " + CountCategory(sorted, WasteCategory.Organic) +
+            " | Anorganik " + CountCategory(sorted, WasteCategory.Inorganic));
+        GUI.Label(new Rect(32, 140, w - 24, 20), "Produk terjual: " + totalSold + " | F: makan | G: buang");
+        GUI.Label(new Rect(Screen.width/2 - 8, Screen.height/2 - 15, 25, 25), "+");
         if (!string.IsNullOrEmpty(prompt))
-        {
-            GUI.Label(
-                new Rect(
-                    Screen.width / 2 - 220,
-                    Screen.height / 2 + 30,
-                    440,
-                    30
-                ),
-                prompt
-            );
-        }
-
-        if (messageTimer > 0f)
-        {
-            GUI.skin.label.fontSize = 14;
-
-            float messageWidth = Mathf.Min(700f, Screen.width - 40f);
-            float messageX = (Screen.width - messageWidth) / 2f;
-
-            GUI.Box(
-                new Rect(messageX, Screen.height - 75f, messageWidth, 42f),
-                ""
-            );
-
-            GUI.Label(
-                new Rect(messageX + 10f, Screen.height - 67f, messageWidth - 20f, 28f),
-                message
-            );
-        }
+            GUI.Label(new Rect(Screen.width/2 - 200, Screen.height/2 + 28, 400, 28), prompt);
+        DrawMessage();
     }
 
+    void DrawMessage()
+    {
+        if (messageTimer <= 0) return;
+        float w = Mathf.Min(700, Screen.width - 40);
+        GUI.Box(new Rect((Screen.width-w)/2, Screen.height-65, w, 40), "");
+        GUI.Label(new Rect((Screen.width-w)/2+10, Screen.height-58, w-20, 28), message);
+    }
+
+    public static bool IsValidTrashType(TrashType t) => (int)t >= 0 && (int)t < TrashTypeCount;
+    public static string GetTrashName(TrashType t) => IsValidTrashType(t) ? TrashNames[(int)t] : "Sampah tidak dikenal";
+    public static WasteCategory GetCategory(TrashType t) =>
+        t == TrashType.FoodWaste || t == TrashType.DryLeaves ? WasteCategory.Organic : WasteCategory.Inorganic;
 }
