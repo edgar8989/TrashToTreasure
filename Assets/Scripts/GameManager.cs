@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
     [Header("Status")]
     public int money = 20000;
     [Range(0, 100)] public float hunger = 100f;
-    public float hungerDropPerSecond = 0.5f;
+    public float hungerDropPerSecond = 0.15f;
 
     [Header("Tas")]
     public int inventoryCapacity = 5;
@@ -57,6 +57,9 @@ public class GameManager : MonoBehaviour
     {
         if (I != null && I != this) { Destroy(gameObject); return; }
         I = this;
+        // Batasi laju hunger agar nilai lama yang tersimpan di Inspector
+        // (misalnya 0.5) ikut menggunakan kecepatan baru yang lebih lambat.
+        hungerDropPerSecond = Mathf.Clamp(hungerDropPerSecond, 0f, 0.15f);
         if (carried == null) carried = new List<TrashType>();
         System.Array.Resize(ref sorted, TrashTypeCount);
         System.Array.Resize(ref products, ProductCount);
@@ -71,7 +74,16 @@ public class GameManager : MonoBehaviour
         // Jangan jalankan gameplay lagi setelah karakter mati.
         if (IsDead) return;
 
-        hunger = Mathf.Max(0, hunger - hungerDropPerSecond * Time.deltaTime);
+        // Hunger hanya berkurang saat pemain sedang bermain aktif.
+        // Menu tempat pilah/mesin dan dialog NPC tidak menghabiskan hunger.
+        bool isInteracting =
+            WorldObject.MenuOpen ||
+            VehicleController.CargoMenuOpen ||
+            FriendlyNPC.DialogOpen ||
+            Time.timeScale <= 0f;
+
+        if (!isInteracting)
+            hunger = Mathf.Max(0, hunger - hungerDropPerSecond * Time.deltaTime);
 
         // Karakter langsung mati ketika hunger mencapai 0.
         if (hunger <= 0f)

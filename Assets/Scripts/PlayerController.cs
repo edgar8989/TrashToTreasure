@@ -70,6 +70,16 @@ public class PlayerController : MonoBehaviour
 
         if (gm == null) return;
 
+        // Dialog NPC menghentikan kontrol pemain sampai dialog ditutup.
+        if (FriendlyNPC.DialogOpen)
+        {
+            gm.prompt = "";
+            ResetCharacterAnimation();
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+            return;
+        }
+
         // Ketika menu terbuka
         if (WorldObject.MenuOpen ||
             VehicleController.CargoMenuOpen)
@@ -140,13 +150,16 @@ public class PlayerController : MonoBehaviour
 
     void HandleInteraction()
     {
-        GameManager.I.prompt = "";
+        GameManager gm = GameManager.I;
+        if (gm == null) return;
 
-        Ray ray = new Ray(
-            cam != null ? cam.position : transform.position,
-            cam != null ? cam.forward : transform.forward
-        );
+        gm.prompt = "";
 
+        Transform cameraTransform = cam != null ? cam : transform;
+        Ray ray = new Ray(cameraTransform.position, cameraTransform.forward);
+        Interactable target = null;
+
+        // Prioritaskan raycast tepat di tengah layar seperti sistem semula.
         if (Physics.Raycast(
             ray,
             out RaycastHit hit,
@@ -154,18 +167,47 @@ public class PlayerController : MonoBehaviour
             Physics.DefaultRaycastLayers,
             QueryTriggerInteraction.Collide))
         {
-            Interactable target =
-                hit.collider.GetComponentInParent<Interactable>();
+            target = hit.collider.GetComponentInParent<Interactable>();
+        }
 
-            if (target != null)
+        // Fallback: beberapa NPC memakai collider/rig bertingkat sehingga
+        // raycast dapat mengenai bagian tubuh yang bukan child Interactable,
+        // atau collider NPC tidak ikut terdeteksi. Cari NPC terdekat di depan kamera.
+        if (target == null)
+        {
+            Interactable[] candidates = FindObjectsByType<Interactable>(FindObjectsSortMode.None);
+            float bestDistance = float.MaxValue;
+
+            foreach (Interactable candidate in candidates)
             {
-                GameManager.I.prompt = target.prompt;
+                if (candidate == null || !candidate.isActiveAndEnabled)
+                    continue;
 
-                if (Input.GetKeyDown(KeyCode.E))
+                Vector3 aimPoint = candidate.transform.position + Vector3.up * 1.2f;
+                float playerDistance = Vector3.Distance(transform.position, candidate.transform.position);
+                if (playerDistance > interactionRange + 0.75f)
+                    continue;
+
+                Vector3 direction = (aimPoint - cameraTransform.position).normalized;
+                float facing = Vector3.Dot(cameraTransform.forward, direction);
+                if (facing < 0.55f) // sekitar 57 derajat dari arah kamera
+                    continue;
+
+                float cameraDistance = Vector3.Distance(cameraTransform.position, aimPoint);
+                if (cameraDistance < bestDistance)
                 {
-                    target.Interact();
+                    bestDistance = cameraDistance;
+                    target = candidate;
                 }
             }
+        }
+
+        if (target != null)
+        {
+            gm.prompt = target.prompt;
+
+            if (Input.GetKeyDown(KeyCode.E))
+                target.Interact();
         }
     }
 

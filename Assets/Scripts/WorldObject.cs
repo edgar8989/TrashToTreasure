@@ -234,8 +234,12 @@ public class WorldObject : Interactable
         processing = true;
         Close();
         yield return new WaitForSeconds(count * Mathf.Max(0.1f, processTimePerItem));
-        gm.CompleteReservedProductProduction(pi, count);
-        gm.Notify("Daur ulang selesai. " + GameManager.ProductNames[pi] + " x" + count + " masuk tas.");
+        bool produced = gm.CompleteReservedProductProduction(pi, count);
+        if (produced)
+        {
+            PakIwanQuest.RegisterRecycledProducts(pi, count);
+            gm.Notify("Daur ulang selesai. " + GameManager.ProductNames[pi] + " x" + count + " masuk tas.");
+        }
         processing = false;
     }
 
