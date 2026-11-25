@@ -6,6 +6,12 @@ public class WorldObject : Interactable
     public static bool MenuOpen { get; private set; }
     static WorldObject active;
 
+    // Gaya UI biru-krem yang konsisten dengan panel Status Pemain dan Quest.
+    static GUIStyle menuFrameStyle, menuPanelStyle, menuHeaderStyle;
+    static GUIStyle menuLabelStyle, menuButtonStyle, menuBoxStyle;
+    static Texture2D menuFrameTexture, menuPanelTexture, menuHeaderTexture;
+    static Texture2D menuButtonTexture, menuButtonHoverTexture, menuRowTexture;
+
     [Header("Jenis Objek")]
     public WorldObjectType objectType = WorldObjectType.Trash;
     public TrashType trashType = TrashType.PlasticBottle;
@@ -15,8 +21,12 @@ public class WorldObject : Interactable
     [Header("Pengaturan")]
     [Min(1)] public int capacity = 5;
     [Min(0.1f)] public float processTimePerItem = 1.5f;
-    public int breadPrice = 5000;
     public int[] productPrices = { 15000, 20000, 25000, 10000 };
+
+    [Header("Posisi Produk Hasil Daur Ulang")]
+    [Min(0.1f)] public float productDropSideOffset = 1.5f;
+    [Min(0.1f)] public float productDropSpacing = 0.6f;
+    [Min(0f)] public float productDropHeight = 0.8f;
 
     static readonly int[] machineStock = new int[GameManager.TrashTypeCount];
     static readonly TrashType[] inorganic =
@@ -40,7 +50,7 @@ public class WorldObject : Interactable
         switch (objectType)
         {
             case WorldObjectType.Trash: prompt = "[E] Ambil sampah"; break;
-            case WorldObjectType.FoodShop: prompt = "[E] Beli roti"; break;
+            case WorldObjectType.FoodShop: prompt = "[E] Buka toko makanan"; break;
             case WorldObjectType.SortingBin: prompt = "[E] Buka tempat pilah"; break;
             case WorldObjectType.RecyclingMachine: prompt = "[E] Gunakan mesin daur ulang"; break;
             case WorldObjectType.SellPoint: prompt = "[E] Jual produk"; break;
@@ -81,11 +91,13 @@ public class WorldObject : Interactable
 
         if (objectType == WorldObjectType.FoodShop)
         {
-            if (gm.bread >= gm.foodCapacity) { gm.Notify("Slot makanan penuh!"); return; }
-            if (gm.money < breadPrice) { gm.Notify("Saldo tidak cukup!"); return; }
-            gm.money -= breadPrice;
-            gm.bread++;
-            gm.Notify("Membeli roti. Stok: " + gm.bread + "/" + gm.foodCapacity);
+            active = this;
+            MenuOpen = true;
+            selected = false;
+            amount = 1;
+            feedback = "";
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
             return;
         }
 
@@ -109,6 +121,7 @@ public class WorldObject : Interactable
         if (!MenuOpen || active != this || GameManager.I == null) return;
         switch (objectType)
         {
+            case WorldObjectType.FoodShop: DrawFoodShop(); break;
             case WorldObjectType.SortingBin: DrawSorting(); break;
             case WorldObjectType.RecyclingMachine: DrawMachine(); break;
             case WorldObjectType.SellPoint: DrawSell(); break;
@@ -116,6 +129,34 @@ public class WorldObject : Interactable
     }
 
     bool sendToMachine;
+
+
+    void DrawFoodShop()
+    {
+        GameManager gm = GameManager.I;
+        Window("TOKO MAKANAN", () =>
+        {
+            GUILayout.Label("Uang: Rp" + gm.money.ToString("N0"));
+            GUILayout.Label("Inventaris makanan: " + gm.FoodInventoryCount + "/" + gm.foodCapacity);
+            GUILayout.Space(8);
+
+            for (int i = 0; i < GameManager.FoodCount; i++)
+            {
+                GUILayout.BeginHorizontal();
+                GUILayout.BeginVertical();
+                GUILayout.Label(GameManager.FoodNames[i] + " | Rp" + GameManager.FoodPrices[i].ToString("N0"));
+                GUILayout.Label("Memulihkan " + GameManager.FoodHungerRestore[i].ToString("0") + " Hunger");
+                GUILayout.EndVertical();
+
+                GUI.enabled = gm.FoodInventoryCount < gm.foodCapacity && gm.money >= GameManager.FoodPrices[i];
+                if (GUILayout.Button("Beli", GUILayout.Width(85), GUILayout.Height(38)))
+                    gm.TryBuyFood(i);
+                GUI.enabled = true;
+                GUILayout.EndHorizontal();
+            }
+            GUILayout.Label(feedback);
+        });
+    }
 
     void DrawSorting()
     {
@@ -227,20 +268,82 @@ public class WorldObject : Interactable
         GameManager gm = GameManager.I;
         int count = selectedTransferAmount;
         int pi = gm.GetProductIndex(selectedTrash);
-        if (pi < 0 || !gm.TryReserveProductSlots(count))
-        { feedback = "Tas tidak cukup. Pindahkan barang ke bagasi."; yield break; }
+
+        if (pi < 0 || count <= 0)
+        {
+            feedback = "Produk tidak valid.";
+            yield break;
+        }
 
         machineStock[(int)selectedTrash] -= count;
         processing = true;
         Close();
+
         yield return new WaitForSeconds(count * Mathf.Max(0.1f, processTimePerItem));
-        bool produced = gm.CompleteReservedProductProduction(pi, count);
-        if (produced)
-        {
-            PakIwanQuest.RegisterRecycledProducts(pi, count);
-            gm.Notify("Daur ulang selesai. " + GameManager.ProductNames[pi] + " x" + count + " masuk tas.");
-        }
+
+        SpawnProductPickups(gm, pi, count);
+        PakIwanQuest.RegisterRecycledProducts(pi, count);
+        gm.Notify("Daur ulang selesai. " + GameManager.ProductNames[pi] + " x" + count +
+                  " jatuh di samping mesin. Tekan E untuk mengambilnya.");
+
         processing = false;
+    }
+
+    void SpawnProductPickups(GameManager gm, int index, int count)
+    {
+        GameObject prefab = null;
+        if (gm.productPrefabs != null && index >= 0 && index < gm.productPrefabs.Length)
+            prefab = gm.productPrefabs[index];
+
+        for (int i = 0; i < count; i++)
+        {
+            float spacing = (i - (count - 1) * 0.5f) * productDropSpacing;
+            Vector3 spawnPosition = transform.position
+                + transform.right * productDropSideOffset
+                + transform.forward * spacing
+                + Vector3.up * productDropHeight;
+
+            GameObject obj;
+            if (prefab != null)
+            {
+                obj = Instantiate(prefab, spawnPosition, prefab.transform.rotation);
+            }
+            else
+            {
+                obj = GameObject.CreatePrimitive(
+                    index == 1 ? PrimitiveType.Cube : PrimitiveType.Cylinder
+                );
+                obj.transform.position = spawnPosition;
+            }
+
+            obj.name = "ProductPickup_" + GameManager.ProductNames[index];
+
+            WorldObject pickup = obj.GetComponent<WorldObject>();
+            if (pickup == null)
+                pickup = obj.AddComponent<WorldObject>();
+
+            pickup.objectType = WorldObjectType.ProductPickup;
+            pickup.productIndex = index;
+            pickup.SetPrompt();
+
+            if (obj.GetComponentsInChildren<Collider>().Length == 0)
+                obj.AddComponent<BoxCollider>();
+
+            MeshCollider[] meshColliders = obj.GetComponentsInChildren<MeshCollider>();
+            foreach (MeshCollider mesh in meshColliders)
+                mesh.convex = true;
+
+            Rigidbody rb = obj.GetComponent<Rigidbody>();
+            if (rb == null)
+                rb = obj.AddComponent<Rigidbody>();
+
+            rb.isKinematic = false;
+            rb.useGravity = true;
+            rb.AddForce(
+                transform.right * 1.2f + Vector3.up * 1.5f,
+                ForceMode.Impulse
+            );
+        }
     }
 
     int MachineTotal()
@@ -288,18 +391,113 @@ public class WorldObject : Interactable
         });
     }
 
+    void EnsureWindowStyles()
+    {
+        if (menuFrameStyle != null) return;
+
+        menuFrameTexture = CreateMenuTexture(new Color(0.13f, 0.34f, 0.65f, 1f));
+        menuPanelTexture = CreateMenuTexture(new Color(0.98f, 0.93f, 0.83f, 0.99f));
+        menuHeaderTexture = CreateMenuTexture(new Color(0.15f, 0.46f, 0.84f, 1f));
+        menuButtonTexture = CreateMenuTexture(new Color(0.12f, 0.43f, 0.78f, 1f));
+        menuButtonHoverTexture = CreateMenuTexture(new Color(0.20f, 0.55f, 0.90f, 1f));
+        menuRowTexture = CreateMenuTexture(new Color(1f, 0.97f, 0.89f, 1f));
+
+        menuFrameStyle = new GUIStyle(GUI.skin.box);
+        menuFrameStyle.normal.background = menuFrameTexture;
+
+        menuPanelStyle = new GUIStyle(GUI.skin.box);
+        menuPanelStyle.normal.background = menuPanelTexture;
+
+        menuHeaderStyle = new GUIStyle(GUI.skin.label);
+        menuHeaderStyle.fontSize = 17;
+        menuHeaderStyle.fontStyle = FontStyle.Bold;
+        menuHeaderStyle.alignment = TextAnchor.MiddleCenter;
+        menuHeaderStyle.normal.textColor = Color.white;
+        menuHeaderStyle.normal.background = menuHeaderTexture;
+
+        menuLabelStyle = new GUIStyle(GUI.skin.label);
+        menuLabelStyle.fontSize = 13;
+        menuLabelStyle.wordWrap = true;
+        menuLabelStyle.normal.textColor = new Color(0.25f, 0.18f, 0.12f);
+
+        menuButtonStyle = new GUIStyle(GUI.skin.button);
+        menuButtonStyle.fontSize = 12;
+        menuButtonStyle.fontStyle = FontStyle.Bold;
+        menuButtonStyle.alignment = TextAnchor.MiddleCenter;
+        menuButtonStyle.fixedHeight = 30;
+        menuButtonStyle.normal.textColor = Color.white;
+        menuButtonStyle.hover.textColor = Color.white;
+        menuButtonStyle.active.textColor = Color.white;
+        menuButtonStyle.normal.background = menuButtonTexture;
+        menuButtonStyle.hover.background = menuButtonHoverTexture;
+        menuButtonStyle.active.background = menuButtonTexture;
+
+        menuBoxStyle = new GUIStyle(GUI.skin.box);
+        menuBoxStyle.normal.background = menuRowTexture;
+        menuBoxStyle.normal.textColor = new Color(0.25f, 0.18f, 0.12f);
+        menuBoxStyle.padding = new RectOffset(8, 8, 5, 5);
+    }
+
+    Texture2D CreateMenuTexture(Color color)
+    {
+        Texture2D texture = new Texture2D(1, 1);
+        texture.hideFlags = HideFlags.HideAndDontSave;
+        texture.SetPixel(0, 0, color);
+        texture.Apply();
+        return texture;
+    }
+
     void Window(string title, System.Action content)
     {
-        float w = Mathf.Min(500f, Screen.width - 30f);
-        float h = Mathf.Min(550f, Screen.height - 30f);
-        GUILayout.BeginArea(new Rect((Screen.width-w)/2, (Screen.height-h)/2, w, h), GUI.skin.window);
-        GUILayout.BeginVertical();
-        GUILayout.Label(title);
-        content();
-        GUILayout.FlexibleSpace();
-        if (GUILayout.Button("Tutup", GUILayout.Height(32))) Close();
-        GUILayout.EndVertical();
-        GUILayout.EndArea();
+        EnsureWindowStyles();
+
+        float w = Mathf.Min(560f, Screen.width - 30f);
+        float h = Mathf.Min(540f, Screen.height - 30f);
+        float x = (Screen.width - w) * 0.5f;
+        float y = (Screen.height - h) * 0.5f;
+
+        // Bingkai biru dan panel isi krem.
+        GUI.Box(new Rect(x, y + 10f, w, h), GUIContent.none, menuFrameStyle);
+        GUI.Box(new Rect(x + 5f, y + 15f, w - 10f, h - 10f),
+            GUIContent.none, menuPanelStyle);
+        GUI.Box(new Rect(x + 18f, y, w - 36f, 44f),
+            GUIContent.none, menuHeaderStyle);
+        GUI.Label(new Rect(x + 18f, y + 1f, w - 36f, 42f),
+            title, menuHeaderStyle);
+
+        // Simpan style bawaan dan pulihkan setelah panel selesai digambar.
+        GUIStyle oldLabel = GUI.skin.label;
+        GUIStyle oldButton = GUI.skin.button;
+        GUIStyle oldBox = GUI.skin.box;
+        GUIStyle oldWindow = GUI.skin.window;
+
+        try
+        {
+            GUI.skin.label = menuLabelStyle;
+            GUI.skin.button = menuButtonStyle;
+            GUI.skin.box = menuBoxStyle;
+            GUI.skin.window = menuPanelStyle;
+
+            GUILayout.BeginArea(new Rect(x + 24f, y + 58f, w - 48f, h - 82f));
+            GUILayout.BeginVertical();
+
+            content();
+
+            GUILayout.FlexibleSpace();
+            GUILayout.Space(8f);
+            if (GUILayout.Button("TUTUP", GUILayout.Height(36f)))
+                Close();
+
+            GUILayout.EndVertical();
+            GUILayout.EndArea();
+        }
+        finally
+        {
+            GUI.skin.label = oldLabel;
+            GUI.skin.button = oldButton;
+            GUI.skin.box = oldBox;
+            GUI.skin.window = oldWindow;
+        }
     }
 
     TrashType[] Types() => category == WasteCategory.Organic ? organic : inorganic;

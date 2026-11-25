@@ -33,16 +33,13 @@ public class PakIwanQuest : Interactable
 
     [Header("Job Offer Dialogue")]
     [TextArea(2, 4)]
-    public string[] offerLines =
+    public string[] initialOfferLines =
     {
         "Pak Iwan: Halo, Nak. Apakah kamu sedang mencari pekerjaan?",
         "Pemain: Iya, Pak. Saya sedang membutuhkan uang.",
-        "Pak Iwan: Kebetulan saya punya pekerjaan untukmu.",
-        "Pemain: Pekerjaan apa, Pak?",
-        "Pak Iwan: Saya ingin kamu mengumpulkan 5 sampah terlebih dahulu.",
-        "Pak Iwan: Cari sampah di sekitar lingkungan ini, lalu bawa semuanya ke toko saya.",
-        "Pemain: Baik, Pak. Saya akan mengumpulkannya.",
-        "Pak Iwan: Kalau sudah terkumpul 5, kembali temui saya di toko."
+        "Pak Iwan: Saya punya pekerjaan. Pertama, kumpulkan 5 sampah di sekitar lingkungan ini.",
+        "Pak Iwan: Bawa sampah tersebut ke toko saya. Setelah itu, saya akan memberikan tugas daur ulang.",
+        "Pemain: Baik, Pak. Saya akan mengumpulkan sampah dan kembali ke toko Bapak."
     };
 
     [Header("Reminder Dialogue")]
@@ -108,6 +105,14 @@ public class PakIwanQuest : Interactable
 
     private static PakIwanQuest activeQuest;
 
+    static GUIStyle questFrameStyle, questPanelStyle, questHeaderStyle, questTextStyle;
+    static GUIStyle questButtonStyle, questButtonAltStyle, questBadgeStyle;
+    static Texture2D questFrameTexture, questPanelTexture, questHeaderTexture, questBadgeTexture;
+
+    // Dibaca oleh PakBudiDialogue untuk membuka Quest 3 setelah dua quest selesai.
+    public static bool Quest1Completed { get; private set; }
+    public static bool Quest2Completed { get; private set; }
+
     // Pak Iwan disembunyikan saat game mulai karena ia akan menempati
     // lokasi awal Pak Budi setelah percakapan Pak Budi selesai.
     private Renderer[] npcRenderers;
@@ -130,6 +135,8 @@ public class PakIwanQuest : Interactable
     void Awake()
     {
         activeQuest = this;
+        Quest1Completed = false;
+        Quest2Completed = false;
         prompt = "";
         foreach (TrashType type in GameManager.AllTrashTypes)
         {
@@ -198,7 +205,7 @@ public class PakIwanQuest : Interactable
         // percakapan tawaran pekerjaan tanpa pemain menekan tombol E.
         state = QuestState.OfferNotFinished;
         RefreshPrompt();
-        BeginDialogue(offerLines);
+        BeginDialogue(initialOfferLines);
     }
 
     public override void Interact()
@@ -227,11 +234,11 @@ public class PakIwanQuest : Interactable
         if (state == QuestState.WaitingForBudi)
         {
             state = QuestState.OfferNotFinished;
-            BeginDialogue(offerLines);
+            BeginDialogue(initialOfferLines);
         }
         else if (state == QuestState.OfferNotFinished)
         {
-            BeginDialogue(offerLines);
+            BeginDialogue(initialOfferLines);
         }
         else if (state == QuestState.CollectingFiveTrash)
         {
@@ -304,7 +311,7 @@ public class PakIwanQuest : Interactable
             return;
         }
 
-        if (state == QuestState.OfferNotFinished && activeLines == offerLines)
+        if (state == QuestState.OfferNotFinished && activeLines == initialOfferLines)
         {
             // Terima pekerjaan, lalu pindahkan Pak Iwan ke depan toko.
             StartCoroutine(AcceptJobAndMoveToShop());
@@ -327,6 +334,7 @@ public class PakIwanQuest : Interactable
             if (RemoveQuest2Products())
             {
                 state = QuestState.Quest2Completed;
+                Quest2Completed = true;
                 if (gameManager != null)
                     gameManager.Notify("Quest 2 selesai! Lima produk daur ulang sudah diserahkan kepada Pak Iwan.");
             }
@@ -343,6 +351,7 @@ public class PakIwanQuest : Interactable
             if (RemoveDeliveredQuestTrash())
             {
                 state = QuestState.Quest2Ready;
+                Quest1Completed = true;
                 if (gameManager != null)
                     gameManager.Notify("Quest 1 selesai! Bicara lagi dengan Pak Iwan untuk menerima Quest 2.");
             }
@@ -644,54 +653,65 @@ public class PakIwanQuest : Interactable
 
         if (!dialogueActive && state == QuestState.CollectingFiveTrash)
         {
-            float width = 280f;
-            GUI.Box(new Rect(Screen.width - width - 20f, 20f, width, 66f), "QUEST 1");
-            GUI.Label(new Rect(Screen.width - width, 48f, width - 35f, 26f),
-                "Kumpulkan sampah: " + collectedCount + " / " + requiredTrash);
+            DrawQuestTracker("QUEST 1", "Kumpulkan sampah", collectedCount, requiredTrash);
         }
         else if (!dialogueActive && state == QuestState.RecyclingFiveProducts)
         {
-            float width = 300f;
-            GUI.Box(new Rect(Screen.width - width - 20f, 20f, width, 66f), "QUEST 2 - DAUR ULANG");
-            GUI.Label(new Rect(Screen.width - width, 48f, width - 35f, 26f),
-                "Produk dibuat: " + recycledProductCount + " / " + requiredProducts);
+            DrawQuestTracker("QUEST 2", "Produk dibuat", recycledProductCount, requiredProducts);
+        }
+        else if (!dialogueActive && state == QuestState.Quest2Completed &&
+                 !PakBudiDialogue.Quest3Completed)
+        {
+            EnsureQuestStyles();
+            float quest3Width = Mathf.Min(380f, Screen.width - 36f);
+            float quest3X = Screen.width - quest3Width - 18f;
+            float quest3Y = 18f;
+            GUI.Box(new Rect(quest3X, quest3Y + 10f, quest3Width, 116f),
+                GUIContent.none, questFrameStyle);
+
+            GUI.Box(new Rect(quest3X + 4f, quest3Y + 14f,
+                quest3Width - 8f, 108f),
+                GUIContent.none, questPanelStyle);
+
+            GUI.Box(new Rect(quest3X + 18f, quest3Y,
+                quest3Width - 70f, 42f),
+                GUIContent.none, questHeaderStyle);
+
+            GUI.Label(new Rect(quest3X + 18f, quest3Y + 1f,
+                quest3Width - 70f, 38f),
+                "QUEST 3", questHeaderStyle);
+
+            GUI.Label(new Rect(quest3X + 24f, quest3Y + 58f,
+                quest3Width - 48f, 42f),
+                "Kumpulkan uang sebanyak Rp250.000", questTextStyle);
         }
 
         if (!dialogueActive || activeLines == null)
             return;
 
-        float panelWidth = Mathf.Min(760f, Screen.width - 40f);
-        float panelHeight = 210f;
+        EnsureQuestStyles();
+
+        float panelWidth = Mathf.Min(780f, Screen.width - 40f);
+        float panelHeight = 222f;
         float x = (Screen.width - panelWidth) * 0.5f;
         float y = Screen.height - panelHeight - 35f;
 
-        GUI.Box(new Rect(x, y, panelWidth, panelHeight), "");
+        GUI.Box(new Rect(x, y + 12, panelWidth, panelHeight), GUIContent.none, questFrameStyle);
+        GUI.Box(new Rect(x + 5, y + 17, panelWidth - 10, panelHeight - 10), GUIContent.none, questPanelStyle);
 
-        GUIStyle nameStyle = new GUIStyle(GUI.skin.label)
-        {
-            fontSize = 22,
-            fontStyle = FontStyle.Bold
-        };
-        nameStyle.normal.textColor = new Color(1f, 0.82f, 0.25f);
+        float ribbonWidth = Mathf.Min(280f, panelWidth - 140f);
+        float ribbonX = x + 24f;
+        GUI.Box(new Rect(ribbonX, y, ribbonWidth, 42f), GUIContent.none, questHeaderStyle);
+        GUI.Label(new Rect(ribbonX, y + 1, ribbonWidth, 38f), characterName.ToUpper(), questHeaderStyle);
 
-        GUIStyle lineStyle = new GUIStyle(GUI.skin.label)
-        {
-            fontSize = 17,
-            wordWrap = true
-        };
-        lineStyle.normal.textColor = Color.white;
+        GUI.Label(new Rect(x + 24f, y + 64f, panelWidth - 48f, 86f), activeLines[currentLine], questTextStyle);
 
-        GUI.Label(new Rect(x + 22f, y + 18f, panelWidth - 44f, 32f), characterName, nameStyle);
-        GUI.Label(new Rect(x + 22f, y + 62f, panelWidth - 44f, 82f), activeLines[currentLine], lineStyle);
-
-        string buttonText = currentLine < activeLines.Length - 1 ? "Lanjut" : "Selesai";
-        if (GUI.Button(new Rect(x + panelWidth - 160f, y + panelHeight - 55f, 135f, 35f), buttonText))
+        string buttonText = currentLine < activeLines.Length - 1 ? "LANJUT" : "SELESAI";
+        if (GUI.Button(new Rect(x + panelWidth - 178f, y + panelHeight - 56f, 150f, 36f), buttonText, questButtonStyle))
             NextLine();
 
-        GUI.Label(
-            new Rect(x + 22f, y + panelHeight - 48f, 250f, 25f),
-            (currentLine + 1) + " / " + activeLines.Length
-        );
+        GUI.Box(new Rect(x + 26f, y + panelHeight - 55f, 82f, 32f), GUIContent.none, questBadgeStyle);
+        GUI.Label(new Rect(x + 26f, y + panelHeight - 55f, 82f, 32f), (currentLine + 1) + " / " + activeLines.Length, questBadgeStyle);
 
         if (Event.current.type == EventType.KeyDown &&
             Event.current.keyCode == KeyCode.Return)
@@ -699,6 +719,83 @@ public class PakIwanQuest : Interactable
             NextLine();
             Event.current.Use();
         }
+    }
+
+    void EnsureQuestStyles()
+    {
+        if (questFrameStyle != null) return;
+
+        questFrameTexture = CreateQuestTexture(new Color(0.16f, 0.38f, 0.71f, 1f));
+        questPanelTexture = CreateQuestTexture(new Color(0.98f, 0.93f, 0.83f, 0.99f));
+        questHeaderTexture = CreateQuestTexture(new Color(0.15f, 0.46f, 0.84f, 1f));
+        questBadgeTexture = CreateQuestTexture(new Color(0.43f, 0.78f, 0.18f, 1f));
+
+        questFrameStyle = new GUIStyle(GUI.skin.box);
+        questFrameStyle.normal.background = questFrameTexture;
+
+        questPanelStyle = new GUIStyle(GUI.skin.box);
+        questPanelStyle.normal.background = questPanelTexture;
+
+        questHeaderStyle = new GUIStyle(GUI.skin.label);
+        questHeaderStyle.fontSize = 17;
+        questHeaderStyle.fontStyle = FontStyle.Bold;
+        questHeaderStyle.alignment = TextAnchor.MiddleCenter;
+        questHeaderStyle.normal.textColor = Color.white;
+        questHeaderStyle.normal.background = questHeaderTexture;
+        questHeaderStyle.hover.background = questHeaderTexture;
+        questHeaderStyle.active.background = questHeaderTexture;
+
+        questTextStyle = new GUIStyle(GUI.skin.label);
+        questTextStyle.fontSize = 16;
+        questTextStyle.wordWrap = true;
+        questTextStyle.normal.textColor = new Color(0.22f, 0.16f, 0.12f);
+
+        questButtonStyle = new GUIStyle(GUI.skin.button);
+        questButtonStyle.fontSize = 14;
+        questButtonStyle.fontStyle = FontStyle.Bold;
+        questButtonStyle.alignment = TextAnchor.MiddleCenter;
+        questButtonStyle.normal.textColor = Color.white;
+        questButtonStyle.normal.background = questBadgeTexture;
+        questButtonStyle.hover.background = questBadgeTexture;
+        questButtonStyle.active.background = questBadgeTexture;
+
+        questButtonAltStyle = new GUIStyle(questButtonStyle);
+        questButtonAltStyle.normal.background = questHeaderTexture;
+        questButtonAltStyle.hover.background = questHeaderTexture;
+        questButtonAltStyle.active.background = questHeaderTexture;
+
+        questBadgeStyle = new GUIStyle(GUI.skin.box);
+        questBadgeStyle.fontSize = 13;
+        questBadgeStyle.fontStyle = FontStyle.Bold;
+        questBadgeStyle.alignment = TextAnchor.MiddleCenter;
+        questBadgeStyle.normal.textColor = Color.white;
+        questBadgeStyle.normal.background = questBadgeTexture;
+    }
+
+    Texture2D CreateQuestTexture(Color color)
+    {
+        Texture2D texture = new Texture2D(1, 1);
+        texture.hideFlags = HideFlags.HideAndDontSave;
+        texture.SetPixel(0, 0, color);
+        texture.Apply();
+        return texture;
+    }
+
+    void DrawQuestTracker(string title, string description, int current, int target)
+    {
+        EnsureQuestStyles();
+        float width = Mathf.Min(380f, Screen.width - 36f);
+        float x = Screen.width - width - 18f;
+        float y = 18f;
+
+        GUI.Box(new Rect(x, y + 10f, width, 116f), GUIContent.none, questFrameStyle);
+        GUI.Box(new Rect(x + 4f, y + 14f, width - 8f, 108f), GUIContent.none, questPanelStyle);
+        GUI.Box(new Rect(x + 18f, y, width - 70f, 42f), GUIContent.none, questHeaderStyle);
+        GUI.Label(new Rect(x + 18f, y + 1f, width - 70f, 38f), title, questHeaderStyle);
+
+        GUI.Label(new Rect(x + 24f, y + 58f, width - 150f, 34f), description + ":", questTextStyle);
+        GUI.Box(new Rect(x + width - 112f, y + 56f, 82f, 34f), GUIContent.none, questBadgeStyle);
+        GUI.Label(new Rect(x + width - 112f, y + 56f, 82f, 34f), current + "/" + target, questBadgeStyle);
     }
 
     void DrawFadeOverlay()

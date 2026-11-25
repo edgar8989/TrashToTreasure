@@ -46,6 +46,11 @@ public class VehicleController : Interactable
     bool cargoModePut = true, cargoProductMode, hasSelection;
     int selectedTrash, selectedProduct, selectedAmount = 1;
     string cargoMessage = "";
+
+    static GUIStyle frameStyle, panelStyle, headerStyle, sectionStyle, bodyStyle;
+    static GUIStyle rowStyle, selectedRowStyle, buttonStyle, activeTabStyle;
+    static GUIStyle primaryButtonStyle, closeButtonStyle, mutedStyle;
+    static Texture2D frameTexture, panelTexture, headerTexture, rowTexture, selectedRowTexture, buttonTexture, activeTexture, primaryTexture, closeTexture;
     Vector2 cargoScroll;
 
     void Awake()
@@ -264,40 +269,123 @@ public class VehicleController : Interactable
         return total;
     }
 
+    void EnsureCargoStyles()
+    {
+        if (frameStyle != null) return;
+
+        frameTexture = MakeTexture(new Color(0.18f, 0.40f, 0.74f, 1f));
+        panelTexture = MakeTexture(new Color(0.98f, 0.93f, 0.84f, 1f));
+        headerTexture = MakeTexture(new Color(0.17f, 0.48f, 0.86f, 1f));
+        rowTexture = MakeTexture(new Color(0.99f, 0.97f, 0.90f, 1f));
+        selectedRowTexture = MakeTexture(new Color(0.85f, 0.94f, 0.77f, 1f));
+        buttonTexture = MakeTexture(new Color(0.27f, 0.55f, 0.84f, 1f));
+        activeTexture = MakeTexture(new Color(0.40f, 0.77f, 0.14f, 1f));
+        primaryTexture = MakeTexture(new Color(0.46f, 0.82f, 0.16f, 1f));
+        closeTexture = MakeTexture(new Color(0.87f, 0.17f, 0.15f, 1f));
+
+        frameStyle = MakeStyle(frameTexture, Color.white, 14, FontStyle.Normal, TextAnchor.MiddleCenter);
+        panelStyle = MakeStyle(panelTexture, new Color(0.20f, 0.16f, 0.12f), 14, FontStyle.Normal, TextAnchor.UpperLeft);
+        headerStyle = MakeStyle(headerTexture, Color.white, 24, FontStyle.Bold, TextAnchor.MiddleCenter);
+        sectionStyle = MakeStyle(null, new Color(0.27f, 0.20f, 0.12f), 14, FontStyle.Bold, TextAnchor.MiddleCenter);
+        bodyStyle = MakeStyle(null, new Color(0.22f, 0.16f, 0.12f), 14, FontStyle.Normal, TextAnchor.MiddleLeft);
+        rowStyle = MakeStyle(rowTexture, new Color(0.20f, 0.16f, 0.12f), 14, FontStyle.Normal, TextAnchor.MiddleLeft);
+        selectedRowStyle = MakeStyle(selectedRowTexture, new Color(0.14f, 0.25f, 0.10f), 14, FontStyle.Bold, TextAnchor.MiddleLeft);
+        buttonStyle = MakeStyle(buttonTexture, Color.white, 13, FontStyle.Bold, TextAnchor.MiddleCenter);
+        activeTabStyle = MakeStyle(activeTexture, Color.white, 13, FontStyle.Bold, TextAnchor.MiddleCenter);
+        primaryButtonStyle = MakeStyle(primaryTexture, Color.white, 16, FontStyle.Bold, TextAnchor.MiddleCenter);
+        closeButtonStyle = MakeStyle(closeTexture, Color.white, 15, FontStyle.Bold, TextAnchor.MiddleCenter);
+        mutedStyle = MakeStyle(null, new Color(0.42f, 0.32f, 0.18f), 12, FontStyle.Italic, TextAnchor.MiddleLeft);
+    }
+
+    Texture2D MakeTexture(Color color)
+    {
+        Texture2D texture = new Texture2D(1, 1);
+        texture.hideFlags = HideFlags.HideAndDontSave;
+        texture.SetPixel(0, 0, color);
+        texture.Apply();
+        return texture;
+    }
+
+    GUIStyle MakeStyle(Texture2D background, Color textColor, int fontSize, FontStyle fontStyle, TextAnchor alignment)
+    {
+        GUIStyle style = new GUIStyle(background == null ? GUI.skin.label : GUI.skin.button);
+        style.fontSize = fontSize;
+        style.fontStyle = fontStyle;
+        style.alignment = alignment;
+        style.wordWrap = true;
+        style.padding = new RectOffset(12, 12, 7, 7);
+        style.margin = new RectOffset(2, 2, 2, 2);
+        style.normal.textColor = textColor;
+        style.hover.textColor = textColor;
+        style.active.textColor = textColor;
+        if (background != null)
+        {
+            style.normal.background = background;
+            style.hover.background = background;
+            style.active.background = background;
+        }
+        return style;
+    }
+
     void OnGUI()
     {
         if (!CargoMenuOpen) return;
         GameManager gm = GameManager.I;
         if (gm == null) return;
-        float w = Mathf.Min(540, Screen.width - 30), h = Mathf.Min(570, Screen.height - 30);
-        GUILayout.BeginArea(new Rect((Screen.width-w)/2, (Screen.height-h)/2, w, h), GUI.skin.window);
+
+        EnsureCargoStyles();
+
+        float width = Mathf.Min(680f, Screen.width - 28f);
+        float height = Mathf.Min(610f, Screen.height - 28f);
+        float x = (Screen.width - width) * 0.5f;
+        float y = (Screen.height - height) * 0.5f;
+
+        GUI.Box(new Rect(x, y + 14, width, height), GUIContent.none, frameStyle);
+        GUI.Box(new Rect(x + 5, y + 19, width - 10, height - 10), GUIContent.none, panelStyle);
+
+        float ribbonWidth = Mathf.Min(width - 110f, 410f);
+        float ribbonX = x + (width - ribbonWidth) * 0.5f;
+        GUI.Box(new Rect(ribbonX, y, ribbonWidth, 50f), GUIContent.none, headerStyle);
+        GUI.Label(new Rect(ribbonX, y + 2, ribbonWidth, 44f), "BAGASI MOBIL", headerStyle);
+
+        if (GUI.Button(new Rect(x + width - 62f, y + 8f, 40f, 40f), "X", closeButtonStyle))
+        {
+            CloseCargo();
+            return;
+        }
+
+        GUILayout.BeginArea(new Rect(x + 20, y + 64, width - 40, height - 76));
         GUILayout.BeginVertical();
-        GUILayout.Label("BAGASI MOBIL");
-        GUILayout.Label("Bagasi: " + TotalCargo() + "/" + cargoCapacity +
-            " | Tas: " + gm.TotalInventoryCount + "/" + gm.inventoryCapacity);
+
+        GUILayout.Label("Isi bagasi: " + TotalCargo() + "/" + cargoCapacity + "    |    Isi tas: " + gm.TotalInventoryCount + "/" + gm.inventoryCapacity, sectionStyle);
+        GUILayout.Space(8);
+
         GUILayout.BeginHorizontal();
-        if (GUILayout.Button(cargoModePut ? "Masukkan ke bagasi ✓" : "Masukkan ke bagasi")) { cargoModePut = true; hasSelection = false; }
-        if (GUILayout.Button(!cargoModePut ? "Ambil ke tas ✓" : "Ambil ke tas")) { cargoModePut = false; hasSelection = false; }
-        GUILayout.EndHorizontal();
-        GUILayout.BeginHorizontal();
-        if (GUILayout.Button(!cargoProductMode ? "Sampah ✓" : "Sampah")) { cargoProductMode = false; hasSelection = false; }
-        if (GUILayout.Button(cargoProductMode ? "Produk ✓" : "Produk")) { cargoProductMode = true; hasSelection = false; }
+        if (GUILayout.Button(cargoModePut ? "MASUKKAN KE BAGASI" : "Masukkan ke bagasi", cargoModePut ? activeTabStyle : buttonStyle, GUILayout.Height(38))) { cargoModePut = true; hasSelection = false; }
+        if (GUILayout.Button(!cargoModePut ? "AMBIL KE TAS" : "Ambil ke tas", !cargoModePut ? activeTabStyle : buttonStyle, GUILayout.Height(38))) { cargoModePut = false; hasSelection = false; }
         GUILayout.EndHorizontal();
 
-        cargoScroll = GUILayout.BeginScrollView(cargoScroll, GUILayout.ExpandHeight(true));
+        GUILayout.BeginHorizontal();
+        if (GUILayout.Button(!cargoProductMode ? "SAMPAH" : "Sampah", !cargoProductMode ? activeTabStyle : buttonStyle, GUILayout.Height(34))) { cargoProductMode = false; hasSelection = false; }
+        if (GUILayout.Button(cargoProductMode ? "PRODUK" : "Produk", cargoProductMode ? activeTabStyle : buttonStyle, GUILayout.Height(34))) { cargoProductMode = true; hasSelection = false; }
+        GUILayout.EndHorizontal();
+        GUILayout.Space(8);
+
         if (!cargoProductMode)
         {
             foreach (TrashType t in GameManager.AllTrashTypes)
             {
                 int idx = (int)t;
                 int stock = cargoModePut ? gm.CountCarried(t) : cargoTrash[idx];
-                GUILayout.BeginHorizontal();
-                GUILayout.Label(GameManager.GetTrashName(t) + " (" + stock + ")");
+                bool isSelected = hasSelection && selectedTrash == idx;
+                GUILayout.BeginHorizontal(isSelected ? selectedRowStyle : rowStyle, GUILayout.Height(38));
+                GUILayout.Label(GameManager.GetTrashName(t) + " (" + stock + ")", bodyStyle, GUILayout.ExpandWidth(true));
                 GUI.enabled = stock > 0;
-                if (GUILayout.Button(hasSelection && selectedTrash == idx ? "Dipilih" : "Pilih", GUILayout.Width(80)))
+                if (GUILayout.Button(isSelected ? "DIPILIH" : "PILIH", isSelected ? activeTabStyle : buttonStyle, GUILayout.Width(112), GUILayout.Height(30)))
                 { selectedTrash = idx; hasSelection = true; selectedAmount = 1; }
                 GUI.enabled = true;
                 GUILayout.EndHorizontal();
+                GUILayout.Space(3);
             }
         }
         else
@@ -305,13 +393,15 @@ public class VehicleController : Interactable
             for (int i = 0; i < GameManager.ProductCount; i++)
             {
                 int stock = cargoModePut ? gm.products[i] : cargoProducts[i];
-                GUILayout.BeginHorizontal();
-                GUILayout.Label(GameManager.ProductNames[i] + " (" + stock + ")");
+                bool isSelected = hasSelection && selectedProduct == i;
+                GUILayout.BeginHorizontal(isSelected ? selectedRowStyle : rowStyle, GUILayout.Height(38));
+                GUILayout.Label(GameManager.ProductNames[i] + " (" + stock + ")", bodyStyle, GUILayout.ExpandWidth(true));
                 GUI.enabled = stock > 0;
-                if (GUILayout.Button(hasSelection && selectedProduct == i ? "Dipilih" : "Pilih", GUILayout.Width(80)))
+                if (GUILayout.Button(isSelected ? "DIPILIH" : "PILIH", isSelected ? activeTabStyle : buttonStyle, GUILayout.Width(112), GUILayout.Height(30)))
                 { selectedProduct = i; hasSelection = true; selectedAmount = 1; }
                 GUI.enabled = true;
                 GUILayout.EndHorizontal();
+                GUILayout.Space(3);
             }
         }
 
@@ -322,21 +412,28 @@ public class VehicleController : Interactable
                 : (cargoModePut ? gm.CountCarried((TrashType)selectedTrash) : cargoTrash[selectedTrash]);
             int room = cargoModePut ? cargoCapacity - TotalCargo() : gm.FreeInventorySpace;
             int max = Mathf.Min(available, room);
+            GUILayout.Space(8);
             if (max > 0)
             {
                 selectedAmount = Mathf.Clamp(selectedAmount, 1, max);
                 GUILayout.BeginHorizontal();
-                if (GUILayout.Button("-", GUILayout.Width(45))) selectedAmount = Mathf.Max(1, selectedAmount - 1);
-                GUILayout.Label("Jumlah: " + selectedAmount);
-                if (GUILayout.Button("+", GUILayout.Width(45))) selectedAmount = Mathf.Min(max, selectedAmount + 1);
+                GUILayout.FlexibleSpace();
+                if (GUILayout.Button("-", buttonStyle, GUILayout.Width(48), GUILayout.Height(34))) selectedAmount = Mathf.Max(1, selectedAmount - 1);
+                GUILayout.Label("JUMLAH: " + selectedAmount + " / " + max, sectionStyle, GUILayout.Width(170), GUILayout.Height(34));
+                if (GUILayout.Button("+", buttonStyle, GUILayout.Width(48), GUILayout.Height(34))) selectedAmount = Mathf.Min(max, selectedAmount + 1);
+                GUILayout.FlexibleSpace();
                 GUILayout.EndHorizontal();
-                if (GUILayout.Button(cargoModePut ? "Simpan ke bagasi" : "Pindahkan ke tas")) TransferCargo(selectedAmount);
+
+                if (GUILayout.Button(cargoModePut ? "SIMPAN KE BAGASI" : "PINDAHKAN KE TAS", primaryButtonStyle, GUILayout.Height(42)))
+                    TransferCargo(selectedAmount);
             }
-            else GUILayout.Label("Kapasitas penuh atau stok kosong.");
+            else GUILayout.Label("Kapasitas penuh atau stok kosong.", mutedStyle);
         }
-        if (!string.IsNullOrEmpty(cargoMessage)) GUILayout.Label(cargoMessage);
-        GUILayout.EndScrollView();
-        if (GUILayout.Button("TUTUP BAGASI", GUILayout.Height(34))) CloseCargo();
+
+        if (!string.IsNullOrEmpty(cargoMessage)) GUILayout.Label(cargoMessage, mutedStyle);
+
+        GUILayout.FlexibleSpace();
+        if (GUILayout.Button("TUTUP BAGASI", buttonStyle, GUILayout.Height(40))) CloseCargo();
         GUILayout.EndVertical();
         GUILayout.EndArea();
     }
