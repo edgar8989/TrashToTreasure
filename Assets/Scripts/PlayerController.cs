@@ -66,6 +66,13 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        // Jangan proses input pemain ketika Pause Menu aktif.
+        if (PauseMenuUI.IsPaused)
+        {
+            ResetCharacterAnimation();
+            return;
+        }
+
         GameManager gm = GameManager.I;
 
         if (gm == null) return;

@@ -420,37 +420,53 @@ void DiscardTrash()
 }
 
 
-    void OnGUI()
+    
+void OnGUI()
+{
+    if (IsDead)
     {
-        if (IsDead)
-        {
-            DrawDeathScreen();
-            return;
-        }
-
-        // HUD tetap terlihat saat menu tempat pilah/toko sedang terbuka.
-        DrawStatusPanel();
-
-        if (WorldObject.MenuOpen || VehicleController.CargoMenuOpen)
-        {
-            DrawMessage();
-            return;
-        }
-
-        GUIStyle crosshairStyle = new GUIStyle(GUI.skin.label);
-        crosshairStyle.alignment = TextAnchor.MiddleCenter;
-        crosshairStyle.fontSize = 20;
-        crosshairStyle.normal.textColor = new Color(1f, 1f, 1f, 0.9f);
-        GUI.Label(new Rect(Screen.width / 2 - 12, Screen.height / 2 - 15, 24, 28), "+", crosshairStyle);
-
-        if (!string.IsNullOrEmpty(prompt))
-        {
-            EnsureHudStyles();
-            GUI.Box(new Rect(Screen.width / 2 - 190, Screen.height / 2 + 28, 380, 32), prompt, hudPromptStyle);
-        }
-
-        DrawMessage();
+        DrawDeathScreen();
+        return;
     }
+
+    // Sembunyikan seluruh HUD ketika Pause Menu aktif.
+    if (PauseMenuUI.IsPaused)
+        return;
+
+    // HUD tetap terlihat saat menu tempat pilah/toko sedang terbuka.
+    DrawStatusPanel();
+
+    if (WorldObject.MenuOpen || VehicleController.CargoMenuOpen)
+    {
+        DrawMessage();
+        return;
+    }
+
+    GUIStyle crosshairStyle = new GUIStyle(GUI.skin.label);
+    crosshairStyle.alignment = TextAnchor.MiddleCenter;
+    crosshairStyle.fontSize = 20;
+    crosshairStyle.normal.textColor = new Color(1f, 1f, 1f, 0.9f);
+
+    GUI.Label(
+        new Rect(Screen.width / 2 - 12, Screen.height / 2 - 15, 24, 28),
+        "+",
+        crosshairStyle
+    );
+
+    if (!string.IsNullOrEmpty(prompt))
+    {
+        EnsureHudStyles();
+
+        GUI.Box(
+            new Rect(Screen.width / 2 - 190, Screen.height / 2 + 28, 380, 32),
+            prompt,
+            hudPromptStyle
+        );
+    }
+
+    DrawMessage();
+}
+
 
     void EnsureHudStyles()
     {

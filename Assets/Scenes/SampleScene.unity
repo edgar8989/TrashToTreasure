@@ -205,8 +205,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &7355915
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -308,8 +310,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &27486714
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -399,8 +403,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1 &27767168
 GameObject:
   m_ObjectHideFlags: 0
@@ -453,14 +459,18 @@ MonoBehaviour:
   startAutomatically: 1
   interactionDistance: 3
   characterName: Pak Budi
-  openingDialogueLines:
+  dialogueLines:
   - 'Pak Budi: Selamat pagi. Saya ingin mengingatkan bahwa SPP anakmu belum dibayar.'
   - 'Pemain: Iya, Pak. Saya belum memiliki cukup uang untuk membayarnya.'
-  - 'Pak Budi: Kamu bisa mendapatkan uang dengan mengumpulkan dan mendaur ulang sampah.'
-  - 'Pak Budi: Temui Pak Iwan dan selesaikan dua tugas yang akan dia berikan.'
-  - 'Pemain: Baik, Pak. Setelah menyelesaikan tugas tersebut, saya akan kembali untuk
-    membayar SPP.'
-  sppAmount: 250000
+  - 'Pak Budi: Kamu bisa mengumpulkan uang dengan memilah sampah dan membuat produk
+    daur ulang.'
+  - 'Pemain: Baik, Pak. Saya akan menyelesaikan tugas yang diberikan.'
+  - 'Pak Budi: Selesaikan tugas dari Pak Iwan terlebih dahulu. Setelah itu, temui
+    saya untuk membayar SPP sebesar Rp250.000.'
+  destinationPoint: {fileID: 27767169}
+  fadeDuration: 0.8
+  blackScreenDuration: 0.5
+  sppPayment: 250000
   prerequisiteLines:
   - 'Pak Budi: Sebelum membayar SPP, kamu harus menyelesaikan dua tugas dari Pak
     Iwan terlebih dahulu.'
@@ -476,12 +486,13 @@ MonoBehaviour:
   - 'Pemain: Iya, Pak. Saya sudah menyelesaikan kedua tugas dan membawa uangnya.'
   - 'Pak Budi: Baik, saya terima pembayaran SPP ini. Terima kasih.'
   - 'Pemain: Sama-sama, Pak. Saya senang kewajiban ini sudah selesai.'
+  paymentSuccessLines:
+  - 'Pak Budi: Pembayaran SPP sebesar Rp250.000 sudah berhasil dan tercatat.'
+  - 'Pak Budi: Terima kasih sudah menyelesaikan kewajibanmu. Semua quest telah selesai.'
+  - 'Pemain: Terima kasih, Pak. Saya senang sudah menyelesaikan semua tugas.'
   alreadyPaidLines:
   - 'Pak Budi: Pembayaran SPP sudah kami terima. Terima kasih sudah menyelesaikannya.'
   - 'Pemain: Sama-sama, Pak.'
-  destinationPoint: {fileID: 27767169}
-  fadeDuration: 0.8
-  blackScreenDuration: 0.5
 --- !u!1001 &46852422
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -583,8 +594,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &63330737
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -971,8 +984,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &95990985
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1062,8 +1077,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &120321263
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1222,8 +1239,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &126845324
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1538,8 +1557,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &168672771
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1983,8 +2004,147 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
+--- !u!1 &195296966
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 195296967}
+  - component: {fileID: 195296969}
+  - component: {fileID: 195296968}
+  m_Layer: 5
+  m_Name: Text (TMP)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &195296967
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 195296966}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 368010533}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &195296968
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 195296966}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: CONTINUE
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4281482775
+  m_fontColor: {r: 0.09019608, g: 0.24313726, b: 0.19607843, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 20
+  m_fontSizeBase: 20
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 1
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_characterHorizontalScale: 1
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_TextWrappingMode: 1
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 0
+  m_ActiveFontFeatures: 6e72656b
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_EmojiFallbackSupport: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!222 &195296969
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 195296966}
+  m_CullTransparentMesh: 1
 --- !u!1001 &204023765
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2143,8 +2303,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!4 &207740028 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4622097374010884, guid: 8952388f882d347438563c4e45e6ce50, type: 3}
@@ -2269,8 +2431,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &220544407
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2607,8 +2771,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &241281841
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2666,6 +2832,143 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b1175cc5bbb11b648af5926d9432b494, type: 3}
+--- !u!1 &248371283
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 248371284}
+  - component: {fileID: 248371286}
+  - component: {fileID: 248371285}
+  m_Layer: 5
+  m_Name: PasueTitle
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &248371284
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 248371283}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 859146588}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 7, y: 116}
+  m_SizeDelta: {x: 200, y: 50}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &248371285
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 248371283}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: PAUSED
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4281482775
+  m_fontColor: {r: 0.09019608, g: 0.24313726, b: 0.19607843, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 45
+  m_fontSizeBase: 45
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 1
+  m_HorizontalAlignment: 1
+  m_VerticalAlignment: 256
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_characterHorizontalScale: 1
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_TextWrappingMode: 1
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 0
+  m_ActiveFontFeatures: 6e72656b
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_EmojiFallbackSupport: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 5.2379303, z: 0, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!222 &248371286
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 248371283}
+  m_CullTransparentMesh: 1
 --- !u!4 &256353871 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4034290980203018955, guid: d5661aaaf8f2273409d87fe91605f6cc, type: 3}
@@ -2837,8 +3140,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &308342576
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3020,8 +3325,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &324229390
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3183,8 +3490,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -3372,8 +3681,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &360688705
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3517,8 +3828,143 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
+--- !u!1 &368010532
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 368010533}
+  - component: {fileID: 368010536}
+  - component: {fileID: 368010535}
+  - component: {fileID: 368010534}
+  m_Layer: 5
+  m_Name: ButtonContinue
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &368010533
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 368010532}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 195296967}
+  m_Father: {fileID: 859146588}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 4}
+  m_SizeDelta: {x: 200, y: 65}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &368010534
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 368010532}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 368010535}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1665366308}
+        m_TargetAssemblyTypeName: PauseMenuUI, Assembly-CSharp
+        m_MethodName: ContinueGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &368010535
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 368010532}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.56078434, g: 0.7372549, b: 0.56078434, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &368010536
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 368010532}
+  m_CullTransparentMesh: 1
 --- !u!1001 &382023275
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3667,8 +4113,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -3954,8 +4402,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!4 &435006377 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4213644545190728, guid: 8952388f882d347438563c4e45e6ce50, type: 3}
@@ -3990,8 +4440,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &439893230
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4153,8 +4605,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &451261738
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4379,8 +4833,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &472555345
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4532,8 +4988,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &477108500
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4798,8 +5256,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1 &513535934 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7487606186109100751, guid: 303e06f32da08d54d802c05a24b74acb, type: 3}
@@ -5019,8 +5479,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &551205564
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5110,8 +5572,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &582524179
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5201,8 +5665,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1 &597056634 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5506527798966040682, guid: 466b89becad13db4db4cb1ece767ad66, type: 3}
@@ -5232,8 +5698,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &598972674
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5323,8 +5791,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &613022129
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5471,8 +5941,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &621246596
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5568,8 +6040,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &634295571
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5857,8 +6331,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &650103993
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5985,6 +6461,82 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5317394648af5b94eaea206e07e79629, type: 3}
+--- !u!1 &661918773
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 661918774}
+  - component: {fileID: 661918776}
+  - component: {fileID: 661918775}
+  m_Layer: 5
+  m_Name: PausePanel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &661918774
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 661918773}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 859146588}
+  m_Father: {fileID: 991213794}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &661918775
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 661918773}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 5171062252789197124, guid: dad7380f8b06c4645ac018b16d7bd012, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &661918776
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 661918773}
+  m_CullTransparentMesh: 1
 --- !u!1 &663784204
 GameObject:
   m_ObjectHideFlags: 0
@@ -6145,8 +6697,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &697530833
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6290,8 +6844,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1 &713372895 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1960827967544219347, guid: febf925e20e9e1142a02ed86321b8dbe, type: 3}
@@ -6321,8 +6877,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1 &718155874 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5506527798966040682, guid: 466b89becad13db4db4cb1ece767ad66, type: 3}
@@ -6352,8 +6910,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1 &749398526
 GameObject:
   m_ObjectHideFlags: 0
@@ -6649,8 +7209,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &771827799
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6812,8 +7374,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &788390113
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6992,8 +7556,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &805553762
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7143,8 +7709,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &822760917
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7234,8 +7802,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &826897179
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7337,8 +7907,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -7572,6 +8144,84 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4307906653718738, guid: e32aaa936bc750a46baf1468a7e955a4, type: 3}
   m_PrefabInstance: {fileID: 857620586}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &859146587
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 859146588}
+  - component: {fileID: 859146590}
+  - component: {fileID: 859146589}
+  m_Layer: 5
+  m_Name: MenuBox
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &859146588
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 859146587}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 248371284}
+  - {fileID: 368010533}
+  - {fileID: 1081062725}
+  m_Father: {fileID: 661918774}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &859146589
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 859146587}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &859146590
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 859146587}
+  m_CullTransparentMesh: 1
 --- !u!1001 &859725495
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7930,8 +8580,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &889559198
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8033,8 +8685,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &894285327
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8244,8 +8898,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!65 &915733916
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -8788,8 +9444,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &962582466
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8879,8 +9537,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &968140158
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9220,8 +9880,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &982346458
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9311,8 +9973,112 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
+--- !u!1 &991213790
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 991213794}
+  - component: {fileID: 991213793}
+  - component: {fileID: 991213792}
+  - component: {fileID: 991213791}
+  m_Layer: 5
+  m_Name: Canvas
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &991213791
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 991213790}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.GraphicRaycaster
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+--- !u!114 &991213792
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 991213790}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.CanvasScaler
+  m_UiScaleMode: 0
+  m_ReferencePixelsPerUnit: 100
+  m_ScaleFactor: 1
+  m_ReferenceResolution: {x: 1920, y: 1080}
+  m_ScreenMatchMode: 0
+  m_MatchWidthOrHeight: 0.5
+  m_PhysicalUnit: 3
+  m_FallbackScreenDPI: 96
+  m_DefaultSpriteDPI: 96
+  m_DynamicPixelsPerUnit: 1
+  m_PresetInfoIsWorld: 0
+--- !u!223 &991213793
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 991213790}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 0
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 0
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
+  m_AdditionalShaderChannelsFlag: 25
+  m_UpdateRectTransformForStandalone: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+  m_TargetDisplay: 0
+--- !u!224 &991213794
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 991213790}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0, y: 0, z: 0}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 661918774}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0, y: 0}
 --- !u!1001 &1010908480
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9474,8 +10240,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &1037087831
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9565,8 +10333,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &1041083950
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9976,8 +10746,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &1069825564
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10064,8 +10836,143 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
+--- !u!1 &1081062724
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1081062725}
+  - component: {fileID: 1081062728}
+  - component: {fileID: 1081062727}
+  - component: {fileID: 1081062726}
+  m_Layer: 5
+  m_Name: ButtonExit
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1081062725
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1081062724}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1678767837}
+  m_Father: {fileID: 859146588}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -77}
+  m_SizeDelta: {x: 200, y: 60}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1081062726
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1081062724}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 1081062727}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1665366308}
+        m_TargetAssemblyTypeName: PauseMenuUI, Assembly-CSharp
+        m_MethodName: ExitToMainMenu
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &1081062727
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1081062724}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.7882353, g: 0.41960785, b: 0.28235295, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1081062728
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1081062724}
+  m_CullTransparentMesh: 1
 --- !u!1001 &1084464680
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10167,8 +11074,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &1106108130
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11013,8 +11922,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1 &1218281023 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3264791039490708363, guid: 54febc5e3ea66144b804b2dba7cb0ed7, type: 3}
@@ -11101,6 +12012,85 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 834242005380108154, guid: 4fa7824a621d72c419d77f7c478045eb, type: 3}
   m_PrefabInstance: {fileID: 1222170240}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1230803898
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1230803899}
+  - component: {fileID: 1230803901}
+  - component: {fileID: 1230803900}
+  m_Layer: 0
+  m_Name: EventSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1230803899
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1230803898}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 3.9999847, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1230803900
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1230803898}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01614664b831546d2ae94a42149d80ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.UI.InputSystemUIInputModule
+  m_SendPointerHoverToParent: 1
+  m_MoveRepeatDelay: 0.5
+  m_MoveRepeatRate: 0.1
+  m_XRTrackingOrigin: {fileID: 0}
+  m_ActionsAsset: {fileID: -944628639613478452, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_PointAction: {fileID: -1654692200621890270, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_MoveAction: {fileID: -8784545083839296357, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_SubmitAction: {fileID: 392368643174621059, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_CancelAction: {fileID: 7727032971491509709, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_LeftClickAction: {fileID: 3001919216989983466, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_MiddleClickAction: {fileID: -2185481485913320682, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_RightClickAction: {fileID: -4090225696740746782, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_ScrollWheelAction: {fileID: 6240969308177333660, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_TrackedDevicePositionAction: {fileID: 6564999863303420839, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_TrackedDeviceOrientationAction: {fileID: 7970375526676320489, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_DeselectOnBackgroundClick: 1
+  m_PointerBehavior: 0
+  m_CursorLockBehavior: 0
+  m_ScrollDeltaPerTick: 6
+--- !u!114 &1230803901
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1230803898}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.EventSystems.EventSystem
+  m_FirstSelected: {fileID: 0}
+  m_sendNavigationEvents: 1
+  m_DragThreshold: 10
 --- !u!1001 &1237720312
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11362,8 +12352,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &1297597550
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11648,8 +12640,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &1307586698
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11931,8 +12925,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!65 &1329741621
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -12055,8 +13051,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &1350447046
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12892,8 +13890,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1 &1425677705 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4631412634673464629, guid: 75cf69c040d46b6419f906880581450f, type: 3}
@@ -12923,8 +13923,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &1433479002
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13259,8 +14261,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &1471487095
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13350,8 +14354,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &1475149570
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13931,8 +14937,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &1524125857
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14034,8 +15042,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!4 &1524428495 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4261528576717780, guid: 8952388f882d347438563c4e45e6ce50, type: 3}
@@ -15096,8 +16106,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &1609402444
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15618,8 +16630,9 @@ MonoBehaviour:
   hungerDropPerSecond: 0.5
   inventoryCapacity: 5
   carried: 
-  bread: 0
+  foods: 
   foodCapacity: 5
+  bread: 0
   products: 00000000000000000000000000000000
   sorted: 00000000000000000000000000000000000000000000000000000000
   productPrefabs:
@@ -15669,6 +16682,52 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1636019217}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1665366307
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1665366309}
+  - component: {fileID: 1665366308}
+  m_Layer: 0
+  m_Name: PauseManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1665366308
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1665366307}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d037991e3b817de4f994f362718aa2f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PauseMenuUI
+  pausePanel: {fileID: 661918773}
+  mainMenuScene: MainMenu
+--- !u!4 &1665366309
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1665366307}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 294.9657, y: 199.64659, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1668407443
 PrefabInstance:
@@ -15873,8 +16932,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &1674604514
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15932,6 +16993,143 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f2e803525a1b9e14d9979fe774a35d4d, type: 3}
+--- !u!1 &1678767836
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1678767837}
+  - component: {fileID: 1678767839}
+  - component: {fileID: 1678767838}
+  m_Layer: 5
+  m_Name: Text (TMP)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1678767837
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1678767836}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1081062725}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1678767838
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1678767836}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: EXIT
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4281482775
+  m_fontColor: {r: 0.09019608, g: 0.24313726, b: 0.19607843, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 24
+  m_fontSizeBase: 24
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 1
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_characterHorizontalScale: 1
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_TextWrappingMode: 1
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 0
+  m_ActiveFontFeatures: 6e72656b
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_EmojiFallbackSupport: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!222 &1678767839
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1678767836}
+  m_CullTransparentMesh: 1
 --- !u!1001 &1681063686
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -16081,8 +17279,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &1697945590
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -16656,8 +17856,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &1733214008
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -16747,8 +17949,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &1733848386
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17228,8 +18432,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1 &1766119266 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 9055112274125254944, guid: b05c8138689f126458e7f69eff351511, type: 3}
@@ -17247,15 +18453,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8141e0a80b29dc443bf27cf8d500e434, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WorldObject
-  prompt: '[E] Beli roti'
+  prompt: '[E] Buka toko makanan'
   objectType: 1
   trashType: 0
   category: 1
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &1767704379
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17474,8 +18682,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &1792666933
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17622,8 +18832,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &1797173668
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17906,8 +19118,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &1812468738
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -18149,8 +19363,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &1836049894
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -18442,8 +19658,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &1853951388
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -18805,8 +20023,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &1876341830
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -19168,8 +20388,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &1923088121
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -19287,8 +20509,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &1931811348
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -19378,8 +20602,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &1946904054
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -19469,8 +20695,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &1953317598
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -19644,8 +20872,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &1963615564
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -19735,8 +20965,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1 &1965403270 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4558981262893915084, guid: a8938b81b17afe84a971018179030caa, type: 3}
@@ -19846,8 +21078,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &1972702854
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -20123,8 +21357,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &2003411840
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -20211,8 +21447,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &2022760779
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -20359,8 +21597,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1 &2034963151 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7728639425441134940, guid: 9175d93927057c44eb14f3e3e33d934a, type: 3}
@@ -20390,8 +21630,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!65 &2034963154
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -20442,8 +21684,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &2038885471
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -20647,8 +21891,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &2086562111
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -20980,8 +22226,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &2107158594
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -21083,8 +22331,10 @@ MonoBehaviour:
   productIndex: 0
   capacity: 5
   processTimePerItem: 1.5
-  breadPrice: 5000
   productPrices: 983a0000204e0000a861000010270000
+  productDropSideOffset: 1.5
+  productDropSpacing: 0.6
+  productDropHeight: 0.8
 --- !u!1001 &2110880595
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -21380,6 +22630,9 @@ SceneRoots:
   m_Roots:
   - {fileID: 1656105660}
   - {fileID: 1572839259}
+  - {fileID: 991213794}
+  - {fileID: 1230803899}
+  - {fileID: 1665366309}
   - {fileID: 210883823}
   - {fileID: 1589314568}
   - {fileID: 134142957}

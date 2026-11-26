@@ -129,16 +129,17 @@ public class PauseMenuUI : MonoBehaviour
     // =====================================
     // EXIT TO MAIN MENU
     // =====================================
-
     public void ExitToMainMenu()
     {
-        Debug.Log("KEMBALI KE MAIN MENU");
+        Debug.Log("TOMBOL EXIT DIKLIK!");
 
         IsPaused = false;
         Time.timeScale = 1f;
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+
+        Debug.Log("Mencoba membuka scene: " + mainMenuScene);
 
         SceneManager.LoadScene(mainMenuScene);
     }

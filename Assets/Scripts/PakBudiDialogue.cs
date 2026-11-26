@@ -320,6 +320,9 @@ public class PakBudiDialogue : Interactable
 
     void OnGUI()
     {
+        if (PauseMenuUI.IsPaused)
+        return;
+
         if (transitionRunning || dialogueActive)
             DrawFadeOverlay();
 

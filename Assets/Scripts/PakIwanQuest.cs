@@ -645,6 +645,9 @@ public class PakIwanQuest : Interactable
 
     void OnGUI()
     {
+        if (PauseMenuUI.IsPaused)
+        return;
+        
         if (transitionRunning)
         {
             DrawFadeOverlay();

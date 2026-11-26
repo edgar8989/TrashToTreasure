@@ -102,6 +102,9 @@ public class FriendlyNPC : Interactable
 
     void OnGUI()
     {
+        if (PauseMenuUI.IsPaused)
+        return;
+        
         if (activeNPC != this || !DialogOpen) return;
 
         EnsureDialogStyles();
